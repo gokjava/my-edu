@@ -1,0 +1,223 @@
+<template>
+    <div class="register-container">
+      <div class="register-title">
+        学员注册
+      </div>
+      <div class="register-know">
+        <div class="know-item1">
+          注册须知：
+        </div>
+        <div class="know-item2" style="margin-top: 16px;">
+          1. 带“<span style="color: red">*</span>”的信息为必填
+        </div>
+        <div class="know-item2">
+          2. 资格证号填写：2017年前通过的填写资格证书号，2017年及后通过的填写管理号
+        </div>
+        <div class="know-item2">
+          3. 注册信息将作为培训认证的依据，请保证所填写信息的真实性。
+        </div>
+        <div class="know-item2">
+          4. 您学习或注册的信息，本平台将严格遵守国家法律、法令并对您的个人信息进行保密，所有信息将不会提供给除国家法律机关之外的任何商业机构。
+        </div>
+      </div>
+  
+      <div style="margin-top: 14px;">
+        <StudentDetail></StudentDetail>
+      </div>
+  
+      <div class="resiter-footer-button">
+        <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button style="margin-left: 16px;" @click="toLogin">返回</el-button>
+      </div>
+
+        <el-dialog
+            v-model="dialogVisible"
+            :show-close="false"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            width="730px"
+            >
+
+            <div style="width: 100%; height: 341px;">
+                
+                <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 62px;">
+                    <el-icon v-if="registerSuccess" color="rgba(103, 197, 58, 1)" size="100">
+                        <circle-check-filled  />
+                    </el-icon>
+                    <el-icon v-else color="red" size="100">
+                        <circle-close-filled />
+                    </el-icon>
+                </div>
+
+                <div style="width: 100%; text-align: center; margin-top: 16px; font-size: 16px; font-weight: 400; color: rgba(19, 20, 20, 1);">
+                    {{ registerSuccess ? '提交成功' : '提交失败' }}
+                </div>
+
+                <div style="width: 100%; text-align: center; margin-top: 4px; font-size: 14px; font-weight: 400; color: rgba(144, 147, 153, 1); line-height: 24px;">
+                    <div v-if="registerSuccess">
+                        请登录后前往“我的信息”再次核对个人资料，如有错误，
+                    </div>
+                    <div v-if="registerSuccess">
+                        请修改后保存，以免影响继续教育。若有疑问可咨询：<span style="color: rgba(255, 87, 51, 1);">0451-82738127</span>
+                    </div>
+                    <div v-if="!registerSuccess">
+                        你的注册信息已存在，请勿重复提交。如有疑问，可致电 <span style="color: rgba(255, 87, 51, 1);">010-65279180</span>
+                    </div>
+                </div>
+
+                <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 36px;">
+                    <el-button v-if="registerSuccess" type="primary" @click="toLogin">前往登录</el-button>
+                    <el-button v-else type="primary" @click="dialogVisible = false">我已知晓</el-button>
+                </div>
+            </div>
+
+        </el-dialog>
+    </div>
+  </template>
+  
+  <script>
+  import { defineComponent, ref, getCurrentInstance } from 'vue'
+  import StudentDetail from '@/components/common/student-detail-components'
+ 
+//   import { ElMessage } from 'element-plus'
+  
+  export default defineComponent({
+    name: "registerPage",
+    components: {
+        StudentDetail
+    },
+    setup() {
+
+      const registerSuccess = ref(true)
+
+      const dialogVisible = ref(false)
+      
+  
+      const onSubmit = () => {
+        // const requiredFields = [
+        //     { field: name.value, name: '姓名' },
+        //     { field: areaProvince.value, name: '所属城市' },
+        //     { field: areaCity.value, name: '所属城市' },
+        //     { field: areaDistrict.value, name: '所属城市' },
+        //     { field: idcard.value, name: '身份证号' },
+        //     { field: mailProvince.value, name: '通讯城市' },
+        //     { field: mailCity.value, name: '通讯城市' },
+        //     { field: mailDistrict.value, name: '通讯城市' },
+        //     { field: phone.value, name: '手机号' },
+        //     { field: gender.value, name: '性别' },
+        //     { field: workPlace.value, name: '工作单位' },
+        //     { field: certificateType.value, name: '证书类型' },
+        //     { field: graduateSchool.value, name: '毕业院校' },
+        //     { field: certificateNo.value, name: '资格证书' },
+        //     { field: graduateMajor.value, name: '毕业专业' },
+        //     { field: professionalTitle.value, name: '职称' },
+        //     { field: certificateDate.value, name: '批准日期' },
+        //     { field: certificateRange.value, name: '职业范围' },
+        //     { field: email.value, name: '电子邮箱' },
+        // ];
+
+        // for (const field of requiredFields) {
+        //     if (!field.field) {
+        //         ElMessage({
+        //             message: `请填写${field.name}`,
+        //             type: 'error',
+        //         });
+        //         return;
+        //     }
+        // }
+
+        let random = Math.floor(Math.random() * 2)
+        if (random == 0) {
+            registerSuccess.value = true
+        } else {
+            registerSuccess.value = false
+        }
+        dialogVisible.value = true
+      }
+
+      
+      const { proxy } = getCurrentInstance();
+
+      const toLogin = () => {
+            proxy.$router.push('/');
+        }
+
+  
+      return {
+        toLogin,
+        dialogVisible,
+        registerSuccess,
+        onSubmit,
+      }
+    }
+  })
+  </script>
+
+<style>
+body {
+    background-color: rgba(236, 245, 255, 1) ;
+}
+
+.resiter-footer-button {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding-bottom: 20px;
+    margin-top: 20px;
+
+    button {
+        width: 180px;
+        height: 32px;
+    }
+}
+
+.register-container {
+    width: 964px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 1);;
+    margin-top: 51px;
+
+    .register-title {
+        margin: 0 auto;
+        padding-top: 16px;
+        font-size: 20px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 28px;
+        color: rgba(48, 49, 51, 1);
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .register-know {
+        width: 915px;
+        height: 159px;
+        margin: 0 auto;
+        opacity: 1;
+        background: rgba(240, 249, 235, 1);
+        margin-top: 28px;
+
+
+        .know-item1 {
+            padding-top: 8px; 
+            padding-left: 9px;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 22px;
+            color: rgba(96, 98, 102, 1);
+        }
+
+        .know-item2 {
+            padding-left: 9px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 22px;
+            color: rgba(144, 147, 153, 1);
+            white-space: pre-line;
+        }
+    }
+}
+
+</style>
