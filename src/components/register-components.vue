@@ -22,7 +22,7 @@
       </div>
   
       <div style="margin-top: 14px;">
-        <StudentDetail></StudentDetail>
+        <StudentDetail ref="studentDetailRef"></StudentDetail>
       </div>
   
       <div class="resiter-footer-button">
@@ -78,8 +78,7 @@
   <script>
   import { defineComponent, ref, getCurrentInstance } from 'vue'
   import StudentDetail from '@/components/common/student-detail-components'
- 
-//   import { ElMessage } from 'element-plus'
+  import http from '@/axios'
   
   export default defineComponent({
     name: "registerPage",
@@ -92,45 +91,14 @@
 
       const dialogVisible = ref(false)
       
-  
-      const onSubmit = () => {
-        // const requiredFields = [
-        //     { field: name.value, name: '姓名' },
-        //     { field: areaProvince.value, name: '所属城市' },
-        //     { field: areaCity.value, name: '所属城市' },
-        //     { field: areaDistrict.value, name: '所属城市' },
-        //     { field: idcard.value, name: '身份证号' },
-        //     { field: mailProvince.value, name: '通讯城市' },
-        //     { field: mailCity.value, name: '通讯城市' },
-        //     { field: mailDistrict.value, name: '通讯城市' },
-        //     { field: phone.value, name: '手机号' },
-        //     { field: gender.value, name: '性别' },
-        //     { field: workPlace.value, name: '工作单位' },
-        //     { field: certificateType.value, name: '证书类型' },
-        //     { field: graduateSchool.value, name: '毕业院校' },
-        //     { field: certificateNo.value, name: '资格证书' },
-        //     { field: graduateMajor.value, name: '毕业专业' },
-        //     { field: professionalTitle.value, name: '职称' },
-        //     { field: certificateDate.value, name: '批准日期' },
-        //     { field: certificateRange.value, name: '职业范围' },
-        //     { field: email.value, name: '电子邮箱' },
-        // ];
-
-        // for (const field of requiredFields) {
-        //     if (!field.field) {
-        //         ElMessage({
-        //             message: `请填写${field.name}`,
-        //             type: 'error',
-        //         });
-        //         return;
-        //     }
-        // }
-
-        let random = Math.floor(Math.random() * 2)
-        if (random == 0) {
-            registerSuccess.value = true
+      const studentDetailRef = ref(null)
+      const onSubmit = async () => {
+        let result = studentDetailRef.value.canSubmit()
+        if (result != null) {
+          let r = await http.post('/api/client/student/v1/register', result)
+          registerSuccess.value = r.data.code == 1
         } else {
-            registerSuccess.value = false
+          registerSuccess.value = false
         }
         dialogVisible.value = true
       }
@@ -148,6 +116,7 @@
         dialogVisible,
         registerSuccess,
         onSubmit,
+        studentDetailRef
       }
     }
   })

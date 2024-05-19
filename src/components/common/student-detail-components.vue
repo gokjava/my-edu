@@ -86,6 +86,30 @@
               </el-form-item>
             </el-col>
             <el-col :span="11">
+              <el-form-item label="最高学历" required>
+                <el-select v-model="degree" placeholder="请选择">
+                  <el-option label="高中" :value="1"></el-option>
+                  <el-option label="中专" :value="2"></el-option>
+                  <el-option label="大专" :value="3"></el-option>
+                  <el-option label="本科" :value="4"></el-option>
+                  <el-option label="研究生" :value="5"></el-option>
+                  <el-option label="博士" :value="6"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="11">
+              <el-form-item label="执业类别" required>
+                <el-select v-model="certificateCategory" placeholder="请选择">
+                  <el-option label="药学" :value="1"></el-option>
+                  <el-option label="中药学" :value="2"></el-option>
+                  <el-option label="药学双证" :value="3"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="11">
               <el-form-item label="毕业院校" required>
                 <el-input v-model="graduateSchool" placeholder="请输入"></el-input>
               </el-form-item>
@@ -129,7 +153,7 @@
           <el-row :gutter="20">
             <el-col :span="11">
               <el-form-item label="批准日期" required>
-                <el-date-picker style="width:100%" v-model="certificateDate" type="date" placeholder="请输入日期"></el-date-picker>
+                <el-date-picker style="width:100%" v-model="certificateDate" type="date" placeholder="请输入日期" ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="11">
@@ -183,10 +207,15 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import cityJson from '@/assets/citylist.json'
+import { ElMessage } from 'element-plus'
+import dayjs from 'dayjs';
 
 export default defineComponent({
     name: "StudentDetailComponet",
     setup() {
+
+        const degree = ref('')
+        const certificateCategory = ref('')
         const name = ref('')
         const areaProvince = ref('')
         const areaCity = ref('')
@@ -245,7 +274,74 @@ export default defineComponent({
             mailDistrict.value = '';
         };
 
+        const canSubmit =  () => {
+          const requiredFields = [
+            { field: name.value, name: '姓名' },
+            { field: areaProvince.value, name: '所属城市' },
+            { field: areaCity.value, name: '所属城市' },
+            { field: areaDistrict.value, name: '所属城市' },
+            { field: idcard.value, name: '身份证号' },
+            { field: mailProvince.value, name: '通讯城市' },
+            { field: mailCity.value, name: '通讯城市' },
+            { field: mailDistrict.value, name: '通讯城市' },
+            { field: phone.value, name: '手机号' },
+            { field: gender.value, name: '性别' },
+            { field: workPlace.value, name: '工作单位' },
+            { field: certificateType.value, name: '证书类型' },
+            { field: graduateSchool.value, name: '毕业院校' },
+            { field: certificateNo.value, name: '资格证书' },
+            { field: graduateMajor.value, name: '毕业专业' },
+            { field: professionalTitle.value, name: '职称' },
+            { field: certificateDate.value, name: '批准日期' },
+            { field: certificateRange.value, name: '职业范围' },
+            { field: degree.value, name: '最高学历' },
+            { field: certificateCategory.value, name: '执业类别' },
+            
+          ];
+
+          // console.log(certificateDate.value, dayjs(certificateDate.value).format('YYYY-MM-DD'))
+
+          for (const field of requiredFields) {
+              if (!field.field) {
+                  ElMessage({
+                      message: `请填写${field.name}`,
+                      type: 'error',
+                  });
+                  return null;
+              }
+          }
+
+          return {
+            name: name.value,
+            areaProvince: areaProvince.value,
+            areaCity: areaCity.value,
+            areaDistrict: areaDistrict.value,
+            idcard: idcard.value,
+            mailAddress: mailAddress.value,
+            phone: phone.value,
+            gender: gender.value,
+            mailProvince: mailProvince.value,
+            mailCity: mailCity.value,
+            mailDistrict: mailDistrict.value,
+            workPlace: workPlace.value,
+            certificateType: certificateType.value,
+            graduateSchool: graduateSchool.value,
+            certificateNo: certificateNo.value,
+            graduateMajor: graduateMajor.value,
+            professionalTitle: professionalTitle.value,
+            certificateDate: dayjs(certificateDate.value).format('YYYY-MM-DD'),
+            politicalOutlook: politicalOutlook.value,
+            certificateRange: certificateRange.value,
+            nation: nation.value,
+            email: email.value,
+            degree: degree.value,
+            certificateCategory: certificateCategory.value,
+          }
+        }
+
         return {
+            certificateCategory,
+            degree,
             mailCities,
             mailDistricts,
             onMailProviceChange,
@@ -277,6 +373,7 @@ export default defineComponent({
             mailProvince,
             mailCity,
             mailDistrict,
+            canSubmit
         }
     }
 })

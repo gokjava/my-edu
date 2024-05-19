@@ -70,6 +70,9 @@
 
 <script>
 import { defineComponent, ref, getCurrentInstance  } from 'vue'
+import axios from '@/axios'
+import { ElMessageBox } from 'element-plus'
+import { doubleMd5Reversed } from '@/components/common/common-encry'
 
 export default defineComponent({
 
@@ -87,10 +90,27 @@ export default defineComponent({
             proxy.$router.push('/register');
         }
 
-        const login = () => {
-            let random = Math.floor(Math.random() * 2)
-            if (random == 0) {
-                proxy.$router.push('/home');
+        const login = async () => {
+            // md5(md5(password).split('').reverse().join(''));
+
+            let r = await axios.post('/api/client/student/v1/login', {
+                "idcard": username.value,
+                "password": doubleMd5Reversed(password.value)
+            })
+            if (r.data.code == 1) {
+                console.log(r.data)
+                // 存储localStorage
+                localStorage.setItem('token', r.data.data.data.token)
+                if (!r.data.data.data.user.isInitPassword) {
+                    ElMessageBox.alert('请您修改密码，否则会存在安全问题；请到 我的信息-其它信息-修改密码 处修改', '提示', {
+                        confirmButtonText: 'OK',
+                        callback: () => {
+                            proxy.$router.push('/home')
+                        }
+                    })
+                } else {
+                    proxy.$router.push('/home')
+                }
             }
         }
 

@@ -67,7 +67,7 @@ const menus = [
     {
         index: 1,
         icon: '',
-        name: '继续报名',
+        name: '继教报名',
     },{
         index: 2,
         icon: '',
