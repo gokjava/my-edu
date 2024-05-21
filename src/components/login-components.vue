@@ -105,11 +105,11 @@ export default defineComponent({
                     ElMessageBox.alert('请您修改密码，否则会存在安全问题；请到 我的信息-其它信息-修改密码 处修改', '提示', {
                         confirmButtonText: 'OK',
                         callback: () => {
-                            proxy.$router.push('/home')
+                            proxy.$router.push('/home/workbench')
                         }
                     })
                 } else {
-                    proxy.$router.push('/home')
+                    proxy.$router.push('/home/workbench')
                 }
             }
         }

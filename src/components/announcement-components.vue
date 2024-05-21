@@ -41,7 +41,7 @@ export default defineComponent({
     setup() {
         const { proxy } = getCurrentInstance()
         const toHome = () => {
-            proxy.$router.push('/home');
+            proxy.$router.push('/home/workbench');
         }
         return {
             toHome

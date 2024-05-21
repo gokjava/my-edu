@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="全部" :name="1"></el-tab-pane>
+            <el-tab-pane label="全部" :name="0"></el-tab-pane>
             <el-tab-pane label="待支付" :name="2"></el-tab-pane>
             <el-tab-pane label="已完成" :name="3"></el-tab-pane>
         </el-tabs>
@@ -18,59 +18,79 @@
             </el-table-column>
             <el-table-column align="center" prop="payType" label="支付方式" ></el-table-column>
             <el-table-column align="center" prop="payTime" label="支付时间" min-width="150"></el-table-column>
-            <el-table-column align="center" prop="status" label="状态" >
-                <template #default="scope">
-                    <div :style="{color: scope.row.status == 1 ? 'rgba(255, 0, 0, 1)' : 'rgba(67, 207, 124, 1)'}">{{ scope.row.status == 1 ? '待支付' : '成功' }}</div>
-                </template>
-            </el-table-column>
+            <el-table-column align="center" prop="status" label="状态" ></el-table-column>
         </el-table>
     </div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
+import axios from '@/axios'
 
-const testData = [
-  {
-    "id": "01",
-    "year": 2024,
-    "orderNumber": "2024042510251420100005",
-    "buidTime": "2024-04-25 10:25:14",
-    "amount": "180",
-    "payType": "微信扫码",
-    "payTime": "2024-04-25 10:25:16",
-    "status": 1
-  },
-  {
-    "id": "02",
-    "year": 2024,
-    "orderNumber": "2024042510251420100005",
-    "buidTime": "2024-04-25 10:25:14",
-    "amount": "180",
-    "payType": "微信扫码",
-    "payTime": "2024-04-25 10:25:16",
-    "status": 2
-  },
-  {
-    "id": "03",
-    "year": 2024,
-    "orderNumber": "2024042510251420100005",
-    "buidTime": "2024-04-25 10:25:14",
-    "amount": "180",
-    "payType": "微信扫码",
-    "payTime": "2024-04-25 10:25:16",
-    "status": 2
-  }
-];
+
 
 export default defineComponent({
     name: 'orderComponent',
     setup() {
 
-        const activeName = ref(1)
+        const activeName = ref(0)
         const handleClick = (a) => {
             activeName.value = a.props.name
+            getList()
         }
+
+        const testData = reactive([
+            {
+                "id": "01",
+                "year": 2024,
+                "orderNumber": "2024042510251420100005",
+                "buidTime": "2024-04-25 10:25:14",
+                "amount": "180",
+                "payType": "微信扫码",
+                "payTime": "2024-04-25 10:25:16",
+                "status": 1
+            },
+            {
+                "id": "02",
+                "year": 2024,
+                "orderNumber": "2024042510251420100005",
+                "buidTime": "2024-04-25 10:25:14",
+                "amount": "180",
+                "payType": "微信扫码",
+                "payTime": "2024-04-25 10:25:16",
+                "status": 2
+            },
+            {
+                "id": "03",
+                "year": 2024,
+                "orderNumber": "2024042510251420100005",
+                "buidTime": "2024-04-25 10:25:14",
+                "amount": "180",
+                "payType": "微信扫码",
+                "payTime": "2024-04-25 10:25:16",
+                "status": 2
+            }
+        ]);
+        const getList = async () => {
+            let r = await axios.get(`/api/client/order/v1/my_order?status=${activeName.value}`)
+            if (r.data.code == 1) {
+                testData.splice(0, testData.length)
+                testData.push(...r.data.data.records.map(item => {
+                    return {
+                        ...item,
+                        "id": item.id,
+                        "year": item.year,
+                        "orderNumber": item.orderSn,
+                        "buidTime": item.createTime,
+                        "amount": item.paidinAmount,
+                        "payType": item.paymentMethod == 1 ? '微信' : item.paymentMethod == 2 ? '支付宝' : '线下',
+                        "payTime": item.payTime,
+                        "status": item.statusName
+                    }
+                }))
+            }
+        }
+        getList()
 
         return {
             activeName, testData, handleClick

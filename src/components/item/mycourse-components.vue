@@ -13,8 +13,8 @@
                 <el-button type="primary" @click="continueRegister()">我要报名</el-button>
             </div>
         </div>
-        <div v-if="random == 2" style="width: 100%; display: flex; justify-content: center; margin-top: 150px;">
-            <div class="continue-item" v-for="(item, index) in courseList" :key="item.id" :style="{ marginLeft: index > 0 ? '24px': '0px', backgroundColor: item.learnStatus == 1 ? 'rgba(236, 245, 255, 1)' : 'rgba(245, 247, 250, 1)'}">
+        <div v-if="random == 2" style="width: 100%; display: flex; justify-content: center; margin-top: 150px;flex-wrap: wrap; gap: 24px">
+            <div class="continue-item" v-for="(item) in courseList" :key="item.id" :style="{ backgroundColor: item.learnStatus == 1 ? 'rgba(236, 245, 255, 1)' : 'rgba(245, 247, 250, 1)'}">
                 <div v-if="item.learnStatus != 1" style="width: 104px; height: 21px; background-color: rgba(245, 108, 108, 1); color: #FFFFFF; font-size: 12px; font-weight: 400; margin-left: 135px; display: flex; align-items: center; justify-content: center;">
                     学习通道已关闭
                 </div>
@@ -45,7 +45,7 @@
                         学习总进度
                     </div>
                     <div>
-                        {{item.progress}}%
+                        {{item.progress || 0}}%
                     </div>
                 </div>
                 <div>
@@ -135,7 +135,7 @@
 
                         </svg>
                         <div style="color: rgba(0, 0, 0, 1); font-size: 24px; font-weight: 400; position: relative; bottom: 30px;">
-                            {{ selectCourse.process }}<span style="font-size: 14px;">%</span>
+                            {{ selectCourse.process || 0 }}<span style="font-size: 14px;">%</span>
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
                 <el-tab-pane label="考核合格" :name="5"></el-tab-pane>
             </el-tabs>
 
-            <div style="margin-top: 20px; display: flex; justify-content: center;">
+            <div style="margin-top: 20px; display: flex; justify-content: center; ">
                 <div>
                     <div class="menuasdf" :style="{ backgroundColor: menuIndex == 1 ? 'rgba(64, 158, 255, 0.7)' : 'rgba(51, 126, 204, 0.7)' }" @click="switchKm(1)">
                         专业科目
@@ -159,7 +159,7 @@
                 </div>
                 <div>
                     <div class="menuasdf" :style="{ backgroundColor: menuIndex == 2 ? 'rgba(64, 158, 255, 0.7)' : 'rgba(51, 126, 204, 0.7)' , marginLeft: '16px'}" @click="switchKm(2)">
-                        共需科目
+                        公需科目
                     </div>
                     <div v-if="menuIndex == 2" class="menusanjiaoxing"></div>
                 </div>
@@ -186,7 +186,8 @@
                         <el-progress :percentage="item.programs" color="#B3E19D" style="width: 105%;" class="custom-progress"></el-progress>
                         <div style="display: flex; justify-content: space-between; padding-bottom: 16px; margin-top: 12px;">
                             <el-button style="width: 116px; height: 36px;" type="primary" @click="startStudy(item, index)">开始学习</el-button>
-                            <el-button style="width: 116px; height: 36px;" type="primary" :disabled="item.programs != 100" @click="toOnlineExamination">在线考试</el-button>
+                            <!-- :disabled="item.programs != 100" -->
+                            <el-button style="width: 116px; height: 36px;" type="primary" :disabled="item.programs != 100" @click="toOnlineExamination(item)">在线考试</el-button>
                         </div>
                     </div>
                 </div>
@@ -200,7 +201,7 @@
                     <video-player
                         v-if="selectVideoUrl"
                         ref="videoPlayRef"
-                        :src="serverUrl + '/' + selectVideoUrl"
+                        :src="selectVideoUrl"
                         controls
                         :loop="false"
                         :volume="0.6"
@@ -271,14 +272,14 @@
 
                         <div> 
                             <div style="height: 19px; display: flex; justify-content: end; align-items: end; font-size: 12px; font-weight: 400; line-height: 12px; color: rgba(96, 98, 102, 1);;">
-                                20%
+                                {{videoData.progress}}%
                             </div>
                             <div style="display: flex; align-items: center; ">
                                 <div style="padding-left: 18px; font-size: 12px; font-weight: 400; color: rgba(96, 98, 102, 1); padding-right: 14px; line-height: 20px;">
                                     观看总进度
                                 </div>
                                 <div style="width: 118px;">
-                                    <el-progress :percentage="50" color="#B3E19D" :show-text="false"></el-progress>
+                                    <el-progress :percentage="videoData.progress" color="#B3E19D" :show-text="false"></el-progress>
                                 </div>
                             </div>
                         </div>
@@ -289,8 +290,7 @@
             <div style="width: 100%; margin-top: 24px;">
                 <el-tabs v-model="operationClickIndex" @tab-click="handleOperationClick">
                     <el-tab-pane label="课程介绍" :name="1">
-                        <div style="margin-top: 24px; width: 833px;margin-left: 24px; font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(96, 98, 102, 1); padding-bottom: 27px;">
-                            {{ videoData.introduction }}
+                        <div v-html="videoData.introduction" style="white-space: pre-wrap;margin-top: 24px; width: 833px;margin-left: 24px; font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(96, 98, 102, 1); padding-bottom: 27px;">
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="相关资料" :name="2">
@@ -304,21 +304,20 @@
                         <div>
                             <el-timeline>
                                 <el-timeline-item
+                                    v-for="(item, index) in videoData.learnRecords"
+                                    :key="index"
                                     icon="More"
                                     type="primary"
                                     size="large"
-                                    timestamp="2024-05-01 20:05:10 - 2024-05-01 20:15:02"
+                                    :timestamp="item.type == 1 ? `${item.createTime} - ${item.updateTime}` : null"
                                     >
-                                    观看约10分钟
-                                </el-timeline-item>
-                                <el-timeline-item
-                                    icon="More"
-                                    type="primary"
-                                    size="large"
-                                    >
-                                    抓拍人脸上传<br>
-                                    <img src="https://img.js.design/assets/smartFill/img332164da748e08.png" style="width: 80px; height: 60px; margin-top: 8px;" />
-
+                                    <span v-if="item.type == 1">
+                                        观看约{{ item.endTime - item.startTime <= 60 ? 1 :  parseInt((item.endTime - item.startTime) / 60)}}分钟
+                                    </span>
+                                    <span v-else>
+                                        抓拍人脸上传<br>
+                                        <img :src="item.url" style="width: 80px; height: 60px; margin-top: 8px;" />
+                                    </span>
                                 </el-timeline-item>
                             </el-timeline>
                         </div>
@@ -333,24 +332,24 @@
                             <div style="padding-right: 29px; font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(96, 98, 102, 1);;">
                                 课程满意度
                             </div>
-                            <el-rate v-model="kechengmanyi" allow-half />
+                            <el-rate v-model="courseScore" />
                         </div>
                         <div style="display: flex; align-items: center;">
                             <div style="padding-right: 29px; font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(96, 98, 102, 1);;">
                                 老师满意度
                             </div>
-                            <el-rate v-model="kechengmanyi" allow-half />
+                            <el-rate v-model="teacherScore"  />
                         </div>
                         <div style="display: flex; align-items: center;">
                             <div style="padding-right: 29px; font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(96, 98, 102, 1);;">
                                 整体满意度
                             </div>
-                            <el-rate v-model="kechengmanyi" allow-half />
+                            <el-rate v-model="summaryScore"  />
                         </div>
 
                         <div style="margin-top: 16px;">
-                            <el-input style="width: 100%;" :rows="3" type="textarea" placeholder="请输入内容" ></el-input>
-                            <el-button style="width: 71px; height: 30px; margin-top: 16px;">保存评价</el-button>
+                            <el-input style="width: 100%;" :rows="3" type="textarea" placeholder="请输入内容" v-model="content"></el-input>
+                            <el-button style="width: 71px; height: 30px; margin-top: 16px;" @click="savepj">保存评价</el-button>
                         </div>
                     </div>
 
@@ -368,6 +367,9 @@
         width="896"
         :show-close="false"
         style="padding: 0px"
+        class="customElDialogitem"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
     >
         <div style="width:100%; display: flex">
             <div style="width:448px; background-color: rgba(48, 49, 51, 1); display:flex; flex-direction: column; align-items:center">
@@ -391,9 +393,11 @@
                 </div>
             </div>
             <div style="width:448px; background-color:#ffffff; display:flex; flex-direction: column; align-items:center">
-                <div style="margin-top:24px; width: 297px; height:223px; background-color: black">
-
+                <div style="margin-top:24px; width: 297px; height:223px; ">
+                    <video id="customPzPlayer" autoplay width="297" heigth="223"></video>
                 </div>
+                <canvas id="customPzCanvas" width="297" height="223" style="display: none; width: 297px; height: 223px"></canvas>
+                <img :src="photoDataUrl" style="display: none" />
                 <div style="margin-top: 24px; margin-bottom: 24px"> 
                     <el-button style="width:200px; height:40px" type="primary" @click="pzSuccess">拍照</el-button>
                 </div>
@@ -404,10 +408,9 @@
 
 <script>
 
-import { defineComponent, ref, getCurrentInstance, computed, onUnmounted, reactive } from 'vue'
+import { defineComponent, ref, getCurrentInstance, computed, onUnmounted, reactive, nextTick } from 'vue'
 import { getServerUrl } from '@/components/common/constant'
 import { ElMessage } from 'element-plus'
-import dayjs from 'dayjs'
 const serverUrl = getServerUrl()
 import axios from '@/axios'
 
@@ -465,7 +468,17 @@ export default defineComponent({
                 return
             }
             selectPlayIndex.value = index
+            // 视频暂停，并且时间切换为0秒进度
+            pauseVideo()
+            let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
+            let ps = playData[selectPlayIndex.value].currentDuration
+            if (ps > 0 && ps != parseInt(v.duration)) {
+                v.currentTime = ps
+            } else {
+                v.currentTime = 0
+            }
             selectVideoUrl.value = playData[selectPlayIndex.value].url
+
         }
 
         const operationClickIndex = ref(1)
@@ -506,8 +519,8 @@ export default defineComponent({
             document.removeEventListener('blur', handleWindowBlur)
         })
 
-        const toOnlineExamination = () => {
-            proxy.$router.push('/onlieExamination')
+        const toOnlineExamination = (item) => {
+            proxy.$router.push(`/onlieExamination?id=${item.id}&title=${item.title}`)
         }
 
         const selectCourse = ref()
@@ -536,7 +549,7 @@ export default defineComponent({
                 courseData.push(...r.data.data.records.map(item => {
                     return {
                         id: item.id,
-                        img: serverUrl + '/' + item.thumb,
+                        img: item.thumb,
                         title: item.title,
                         teacher: { name: item.teacherName, zhi: zhiMapping[item.teacherProfession - 1] },
                         danwei: item.teacherWorkplace,
@@ -552,15 +565,44 @@ export default defineComponent({
             menuIndex.value = index
             getCourseList()
         }
-        
+
+        onUnmounted(async ()=> {
+            const permission = await navigator.permissions.query({ name: 'camera' })
+            permission.onchange = () => {}
+        })
+
+        const checkCameraPermission = async (item) => {
+            const permission = await navigator.permissions.query({ name: 'camera' })
+            await requestCameraPermission()
+            permission.onchange = () => {
+                console.log('permission.onchange', permission, permission.state == 'granted')
+                if (permission.state == 'granted') {
+                    canStartStudy(item)
+                } else {
+                    // 退到上一步
+                    ElMessage.error('请您打开摄像头权限')
+                    random.value = 3
+                }
+            }
+            if (permission.state == 'granted') {
+                canStartStudy(item)
+            }
+        }
+        let stream;
+        const requestCameraPermission = async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({video: true})
+                // stream.getTracks().forEach(track => track.stop())
+            } catch(e) {
+                console.log('请求参数异常', e)
+                ElMessage.error('您已关闭摄像头权限，请您打开，操作在地址栏左侧')
+            }
+            
+        }
+
         const videoData = ref({})
         const selectCourseNew = ref({})
-        const startStudy = async (item, index) => {
-            // 判断上一个任务是否完成了
-            if (index != 0 && courseData[index - 1].programs != 100) {
-                ElMessage.error('上一个任务还未完成')
-                return;
-            }
+        const canStartStudy = async (item) => {
             random.value = 4
             selectCourseNew.value = item
             let r = await axios.get(`/api/client/course/v1/learn_course_detail?id=${item.id}`)
@@ -570,6 +612,14 @@ export default defineComponent({
                 playData.push(...r.data.data.chapter)
                 selectVideoUrl.value = playData[selectPlayIndex.value].url
             }
+        }
+        const startStudy = async (item, index) => {
+            // 判断上一个任务是否完成了
+            if (index != 0 && courseData[index - 1].programs != 100) {
+                ElMessage.error('上一个任务还未完成')
+                return;
+            }
+            await checkCameraPermission(item)
         }
 
         const selectVideoUrl = ref('')
@@ -586,6 +636,7 @@ export default defineComponent({
                 return
             }
             console.log('play...')
+            
             // 处理已经有进度的情况
             let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
             let ps = playData[selectPlayIndex.value].currentDuration
@@ -598,7 +649,7 @@ export default defineComponent({
             uploadRecordObject.currentDuration = parseInt(v.currentTime)
             // endTime 是在上报的时候生成
             // id 是调用接口返回的
-            uploadRecordObject.startTime =  dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')// 当前时间 yyyy-MM-dd HH:mm:ss
+            uploadRecordObject.startTime =  uploadRecordObject.currentDuration; // 当前时间 yyyy-MM-dd HH:mm:ss
             uploadRecordObject.totalDuration = parseInt(v.duration)
             uploadRecordObject.type = 1
             uploadRecordObject.id = null
@@ -616,8 +667,8 @@ export default defineComponent({
             customInterval = setInterval(() => {
                 uploadRecord()
             }, 5000);
-            // 总时间的1/3
 
+            uploadRecord()
         }
         const videoPause = () => {
             if (isLearnSuccess()) {
@@ -637,13 +688,16 @@ export default defineComponent({
             if (customInterval) {
                 clearInterval(customInterval)
             }
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop())
+            }
         })
 
         const uploadRecord = () => {
             console.log('上报进度')
             // 上报进度
-            uploadRecordObject.endTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
             let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
+            uploadRecordObject.endTime = parseInt(v.currentTime)
             uploadRecordObject.currentDuration = parseInt(v.currentTime)
             axios.post('/api/client/course/v1/learn_process', uploadRecordObject).then(r => {
                 if (r.data.code == 1) {
@@ -669,13 +723,11 @@ export default defineComponent({
             if (canUpdateTime) {
                 const video = videoPlayRef.value.$el.getElementsByTagName('video')[0]
                 const currentTime = video.currentTime;
-
                 if (currentTime - lastTime.value > 2) {
                     console.log('假设的自定义拖拽的识别...')
                 } else {
                     lastTime.value = currentTime;
                     for (let i = 0; i < capturePoints.length; i++) {
-                        console.log()
                         let all = capturePoints[i] * video.duration
                         let a = Math.abs(all - currentTime)
                         if (a > 0 && a < 2 && capturePointFlags[i] == 0) {
@@ -689,9 +741,19 @@ export default defineComponent({
                 // console.log('不可以更新时间')
             }
         }
-        const captureImage = () => {
+        const captureImage = async () => {
             pauseVideo()
+            // 打开摄像头
+            // pzStream = await navigator.mediaDevices.getUserMedia({video: true})
             videoDialogVisible.value = true
+            nextTick(() => {
+                try {
+                    document.getElementById('customPzPlayer').srcObject = stream
+                } catch(e) {
+                    console.log('err异常', e)
+                }
+            })
+            
         }
 
         const onSeeking = () => {
@@ -727,18 +789,65 @@ export default defineComponent({
         }
 
         const videoDialogVisible = ref(false)
+        // let pzStream = null
+        const photoDataUrl = ref(null)
         const pzSuccess = () => {
-            videoDialogVisible.value = false
+            // 拍照
+            let c = document.getElementById('customPzCanvas')
+            let context = c.getContext('2d')
+            // width: 297px; heigth: 223px
+            console.log(c.width, c.height)
+            context.drawImage(document.getElementById('customPzPlayer'), 0, 0, c.width, c.height)
+            photoDataUrl.value = document.getElementById('customPzCanvas').toDataURL('image/png')
+            // 上报学习进度
+            axios.post('/api/client/course/v1/learn_process', {
+                url: photoDataUrl.value,
+                type: 2,
+                chapterId: playData[selectPlayIndex.value].id,
+                cid: selectCourseNew.value.cid,
+                courseRecordId: selectCourseNew.value.id
+            }).finally(() => {
+                videoDialogVisible.value = false
+            })
         }
         const downloadByUrl = (url) => {
-            window.open(serverUrl + '/' + url)
+            window.open(url)
         }
+
+        const differenceData = (d1, d2) => {
+            const date1Obj = new Date(d1.replace(' ', 'T'))
+            const date2Obj = new Date(d2.replace(' ', 'T'))
+            const diffInMs = Math.abs(date2Obj - date1Obj)
+            const result = Math.floor(diffInMs / (1000* 60))
+            return result == 0 ? 1 : Math.floor(diffInMs / (1000* 60))
+        }
+
+        const savepj = async () => {
+            let r = await axios.post('/api/client/course/v1/evaluate', {
+                cid: selectCourseNew.value.cid,
+                content: content.value,
+                teacherScore: teacherScore.value,
+                summaryScore: summaryScore.value,
+                courseScore: courseScore.value
+            })
+            if (r.data.code == 1) {
+                teacherScore.value = 0
+                summaryScore.value = 0
+                courseScore.value = 0
+                content.value = ''
+            }
+        }
+
+        const teacherScore = ref(0)
+        const summaryScore = ref(0)
+        const courseScore = ref(0)
+        const content = ref('')
 
         return {
             random, continueRegister, calculateCircumference, progressStrokeDashoffset, progressStrokeDasharray, elTabsClick, tableStatus, menuIndex, courseData, selectPlayIndex,
             updatePlayIndex, playData, operationClickIndex, handleOperationClick, pingjia, videoPlay, videoPause, videoPlayRef, onPlayerReady, toOnlineExamination, courseList, toStudy,
             selectCourse, switchKm, startStudy, videoData, zhiMapping, serverUrl, selectVideoUrl, onTimeUpdate, onSeeking, onProgress, onEnded, onSeeked, videoDialogVisible, pzSuccess,
-            downloadByUrl
+            downloadByUrl, photoDataUrl, differenceData, savepj, teacherScore, summaryScore, courseScore, content
         }
     }
 
@@ -806,6 +915,12 @@ export default defineComponent({
     width: 58px; 
     height: 52px; 
     text-align: center;
+}
+
+.customElDialogitem {
+    .el-dialog__header {
+        padding-bottom: 0px !important;
+    }
 }
 
 .prince-desc {

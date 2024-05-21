@@ -21,13 +21,14 @@
                 <div style="margin-top: 24px; font-size: 20px; font-weight: 600; line-height: 28px; padding-bottom: 32px;">
                     {{ menus[isActive].name }}
                 </div>
-                <WorkbenchPage v-if="isActive == 0"></WorkbenchPage>
+                <!-- <WorkbenchPage v-if="isActive == 0"></WorkbenchPage>
                 <ContinuePage v-if="isActive == 1"></ContinuePage>
                 <MycoursePage @to-continue-register="toContinueRegister" v-if="isActive == 2"></MycoursePage>
                 <ReductionPage v-if="isActive == 3"></ReductionPage>
                 <EductionPage v-if="isActive == 4"></EductionPage>
                 <OrderPage v-if="isActive == 5"></OrderPage>
-                <MyInfoPage v-if="isActive == 6"> </MyInfoPage>
+                <MyInfoPage v-if="isActive == 6"> </MyInfoPage> -->
+                <router-view></router-view>
             </div>
         </div>
     </div>
@@ -35,16 +36,8 @@
 
 <script>
 import { defineComponent, ref  } from 'vue'
-import TitlePage from '@/components/common/title-components'
 import { MoreApp } from '@icon-park/vue-next'
-import WorkbenchPage from '@/components/item/workbench-components'
-import ContinuePage from '@/components/item/continuetoregister-components'
-import MycoursePage from '@/components/item/mycourse-components'
-import ReductionPage from '@/components/item/reduction-components'
-import EductionPage from '@/components/item/education-components'
-import OrderPage from '@/components/item/order-components'
-import MyInfoPage from '@/components/item/myinfo-components'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const backgroundColors = [
     { background: '#f56a00', text: '#FFFFFF' },
@@ -63,31 +56,38 @@ const menus = [
         index: 0,
         icon: '',
         name: '工作台',
+        path: 'home/workbench'
     },
     {
         index: 1,
         icon: '',
         name: '继教报名',
+        path: 'home/con'
     },{
         index: 2,
         icon: '',
         name: '我的课程',
+        path: 'home/mycourse'
     },{
         index: 3,
         icon: '',
         name: '学时减免',
+        path: 'home/hour'
     },{
         index: 4,
         icon: '',
         name: '学时证明',
+        path: 'home/eduction'
     },{
         index: 5,
         icon: '',
         name: '我的订单',
+        path: 'home/order'
     },{
         index: 6,
         icon: '',
         name: '我的信息',
+        path: 'home/myinfo'
     }
 ]
 
@@ -96,14 +96,23 @@ export default defineComponent({
 
     name: "HomePage",
     components: {
-        MoreApp, WorkbenchPage, ContinuePage, MycoursePage, TitlePage, ReductionPage, EductionPage, OrderPage, MyInfoPage
+        MoreApp, 
+        // WorkbenchPage, ContinuePage, MycoursePage, TitlePage, ReductionPage, EductionPage, OrderPage, MyInfoPage
     },
     setup() {
 
         const route = useRoute();
         const a = route.query.isActive;
-
+        const router = useRouter()
         const isActive = ref(a || 0)
+        for (let i = 0; i < menus.length; i++) {
+            let item = menus[i]
+            if (route.path.indexOf(item.path) != -1) {
+                isActive.value = i
+                break
+            }
+        }
+        
         const name = ref('高鲲')
         const extractColorByName = () => {
             const index = name.value[0].charCodeAt(0) % backgroundColors.length;
@@ -112,6 +121,7 @@ export default defineComponent({
 
         const selectMenu = (menuItem) => {
             isActive.value = menuItem.index
+            router.push(`/${menuItem.path}`)
         }
 
         const toContinueRegister = () => {

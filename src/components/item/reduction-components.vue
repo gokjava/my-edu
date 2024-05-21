@@ -2,10 +2,10 @@
     <div v-if="random == 1">
         <div class="tabs-with-button">
             <el-tabs style="width: 85%;" v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="全部" :name="1"></el-tab-pane>
-                <el-tab-pane label="待审核" :name="2"></el-tab-pane>
-                <el-tab-pane label="审核通过" :name="3"></el-tab-pane>
-                <el-tab-pane label="审核驳回" :name="4"></el-tab-pane>
+                <el-tab-pane label="全部" :name="0"></el-tab-pane>
+                <el-tab-pane label="待审核" :name="1"></el-tab-pane>
+                <el-tab-pane label="审核通过" :name="2"></el-tab-pane>
+                <el-tab-pane label="审核驳回" :name="3"></el-tab-pane>
             </el-tabs>
             <el-button type="primary" style="width: 88px; height: 32px;" @click="random = 2">新增</el-button>
         </div>
@@ -20,7 +20,7 @@
                 <el-table-column align="center" prop="status" label="状态" ></el-table-column>
                 <el-table-column align="center" label="-" >
                     <template #default="scope">
-                        <el-button  type="text" @click="queryDetail(scope.row.id)">查看详情</el-button>
+                        <el-button  type="text" @click="queryDetail(scope.row)">查看详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -50,7 +50,7 @@
                     申请年度
                 </div>
                 <div class="item-right">
-                    2024
+                    {{ selectItem.year }}
                 </div>
             </div>
             <div style="display: flex;width: 100%; margin-top: 12px;">
@@ -58,7 +58,7 @@
                     减免类型
                 </div>
                 <div class="item-right">
-                    专业
+                    {{ selectItem.type == 1 ? '专业' : '共需' }}
                 </div>
             </div>
             <div style="display: flex;width: 100%; margin-top: 12px;">
@@ -66,20 +66,18 @@
                     申请理由
                 </div>
                 <div class="item-right">
-                    参加了执业药师继续教育课程录制，共4课时
+                    {{ selectItem.reason }}
                 </div>
             </div>
             <div style="display: flex;width: 100%; margin-top: 12px;">
                 <div class="item-left">
                     作证材料
                 </div>
-                <div class="item-right" style="display: flex; gap: 16px; flex-wrap: wrap;">
-                    <img src="https://img.js.design/assets/smartFill/img358164da74c4b8.jpeg" />
-                    <img src="https://img.js.design/assets/smartFill/img358164da74c4b8.jpeg" />
-                    <img src="https://img.js.design/assets/smartFill/img358164da74c4b8.jpeg" />
-                    <img src="https://img.js.design/assets/smartFill/img358164da74c4b8.jpeg" />
-                    <img src="https://img.js.design/assets/smartFill/img358164da74c4b8.jpeg" />
-                    <img src="https://img.js.design/assets/smartFill/img358164da74c4b8.jpeg" />
+                <div class="item-right" >
+                    <div v-for="(item, index) in selectItem.materials" :key="index">
+                        <el-button type="text" style="font-size: 15px" @click="openMaterial(item)">材料{{ index+1 }}</el-button>
+                    </div>
+                    <!-- <img v-for="(item, index) in selectItem.materials" :key="index" :src="item" style="width: 114px; height: 86px" /> -->
                 </div>
             </div>
 
@@ -93,17 +91,32 @@
                 <div class="item-left">
                     审核状态
                 </div>
-                <div class="item-right" style="color: rgba(82, 155, 46, 1);;">
-                    通过
+                <div v-if="selectItem.status == 1" class="item-right" style="color: rgba(0,0,0,1);">
+                    待审核
+                </div>
+                <div v-if="selectItem.status == 2" class="item-right" style="color: rgba(82, 155, 46, 1);">
+                    审核通过
+                </div>
+                <div v-if="selectItem.status == 3" class="item-right" style="color: rgba(255, 87, 51,1);">
+                    审核驳回
                 </div>
             </div>
 
-            <div style="display: flex;width: 100%; margin-top: 12px;">
+            <div style="display: flex;width: 100%; margin-top: 12px;" v-if="selectItem.status == 2 ">
                 <div class="item-left">
-                    审核状态
+                    减免学时
                 </div>
-                <div class="item-right" >
-                    <span style="color: rgba(255, 87, 51, 1); font-size: 14px; font-weight: 600;">&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;</span>学时
+                <div class="item-right">
+                    <span  style="color: rgba(255, 87, 51, 1); font-size: 14px; font-weight: 600;">&nbsp;&nbsp;&nbsp;{{ selectItem.reduceHours }}&nbsp;&nbsp;&nbsp;</span>学时
+                </div>
+            </div>
+
+            <div style="display: flex;width: 100%; margin-top: 12px;" v-if="selectItem.status == 3">
+                <div class="item-left">
+                    驳回理由
+                </div>
+                <div class="item-right" v-if="selectItem.status == 3">
+                    {{ selectItem.denyReason }}
                 </div>
             </div>
 
@@ -112,24 +125,37 @@
 
     <div v-if="random == 2">
         <el-form ref="form" label-width="100px">
-            <el-form-item label="申请年度:">
-                <el-select v-model="form.region" placeholder="请选择" style="width: 115px;">
-                    <el-option label="2023年度" value="shanghai"></el-option>
-                    <el-option label="2024年度" value="beijing"></el-option>
+            <el-form-item label="申请年度:" required>
+                <el-select v-model="formId" placeholder="请选择" style="width: 115px;">
+                    <el-option v-for="item in years" :key="item.id" :label="item.year + '年度' " :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="减免类型:">
-                <el-radio label="专业"></el-radio>
-                <el-radio label="公需"></el-radio>
+            <el-form-item label="减免类型:" required>
+                <el-radio label="专业" v-model="formType" :value="1"></el-radio>
+                <el-radio label="公需" v-model="formType" :value="2"></el-radio>
             </el-form-item>
             <el-form-item label="申请理由:">
-                <el-input type="textarea" v-model="form.desc" :rows="8"></el-input>
+                <el-input type="textarea" v-model="formReason" :rows="8"></el-input>
             </el-form-item>
             <el-form-item label="辅佐材料:">
-                <el-upload action="#" list-type="picture-card" :auto-upload="false">
-                    <el-icon>
-                        <plus />
-                    </el-icon>
+                <el-upload 
+                    :action="serverUrl + '/api/admin/file/v1/upload?type=10'" 
+                    list-type="text" 
+                    name="file"
+                    :show-file-list="true"
+                    :limit="10"
+                    :multiple="true"
+                    :headers="getHeaders"
+                    :on-success="onSuccess"
+                    :on-remove="onRemove"
+                >
+
+                    <div style="display:flex; width: 148px; height: 148px; border: 1px solid rgba(220, 223,230,1); border-radius:4px; align-items: center; justify-content: center;">
+                        <el-icon size="20">
+                            <plus />
+                        </el-icon>
+                    </div>
+                    
                         
                     <template #tip>
                         <div style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(255, 87, 51, 1); margin-top: 12px;">可上传图片、文档、PDF类型文件，最多可上传10份材料</div>
@@ -137,44 +163,19 @@
                 </el-upload>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" >提交申请</el-button>
+                <el-button type="primary" @click="submitApplication">提交申请</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
+import axios from '@/axios'
+import { ElMessage } from 'element-plus'
+import { getServerUrl } from '@/components/common/constant'
+const serverUrl = getServerUrl()
 
-const testData = [
-  {
-    "id": "01",
-    "year": 2024,
-    "exemptionType": "专业",
-    "reason": "参加会议，申请减免",
-    "applicationTime": "2024-05-10 14:20:14",
-    "status": "待审核",
-    "details": "查看详情"
-  },
-  {
-    "id": "02",
-    "year": 2024,
-    "exemptionType": "公需",
-    "reason": "学习通课程学习，积分达到2000分",
-    "applicationTime": "2024-05-10 14:20:14",
-    "status": "审核通过",
-    "details": "查看详情"
-  },
-  {
-    "id": "03",
-    "year": 2024,
-    "exemptionType": "专业",
-    "reason": "主题报告",
-    "applicationTime": "2024-05-10 14:20:14",
-    "status": "审核驳回",
-    "details": "查看详情"
-  }
-]
 
 export default defineComponent({
 
@@ -183,25 +184,105 @@ export default defineComponent({
     },
     setup() {
 
-        const activeName =  ref(1)
+        const activeName =  ref(0)
 
         const handleClick = (a) => {
             activeName.value = a.props.name
+            getList()
         }
 
-        const queryDetail = (id) => {
-            console.log(id)
-            drawer.value = true
+        const selectItem = ref({})
+        const queryDetail = async (item) => {
+            let r = await axios.get(`/api/client/course_reduce/v1/info?id=${item.id}`)
+            if (r.data.code == 1) {
+                drawer.value = true
+                selectItem.value = r.data.data.data
+            }
         }
 
         const drawer = ref(false)
 
         const random = ref(1)
 
-        const form = ref({})
+        const formId = ref(null)
+        const formType = ref(null)
+        const formReason = ref('')
+
+        const years = reactive([])
+        axios.get('/api/client/course/v1/my_course').then(r => {
+            if (r.data.code == 1) {
+                years.push(...r.data.data)
+            }
+        })
+
+        const getHeaders = () => {
+            return {
+                Authorization: localStorage.getItem('token')
+            }
+        }
+
+        const fileListData = reactive([])
+
+        const submitApplication = async () => {
+            if (!formId.value) {
+                ElMessage.error('请选择申请年度')
+                return
+            }
+            if (!formType.value) {
+                ElMessage.error('请选择减免类型')
+                return
+            }
+            let r = await axios.post('/api/client/course_reduce/v1/submit', {
+                signId: formId.value,
+                type: formType.value,
+                reason: formReason.value,
+                materials: fileListData.map(item => item.fullurl)
+            })
+            if (r.data.code == 1) {
+                random.value = 1
+                getList()
+            }
+        }
+
+
+        const testData = reactive([])
+
+        const getList = async () => {
+            let r = await axios.get(`/api/client/course_reduce/v1/query?${activeName.value == 0 ? '' : 'status=' + activeName.value}`)
+            testData.splice(0, testData.length)
+            testData.push(...r.data.data.records.map(item => {
+                return {
+                    ...item,
+                    "id": item.id,
+                    "year": item.year,
+                    "exemptionType": item.type == 1 ? '专业' : '共需',
+                    "reason": item.reason,
+                    "applicationTime": item.createTime,
+                    "status": item.status == 1 ? '待审核' : item.status == 2 ? '审核通过' : '审核不通过',
+                    "details": "查看详情"
+                }
+            }))
+        }
+
+        getList()
+
+        const onSuccess = (response) => {
+            fileListData.push(response.data)
+        }
+
+        const onRemove = (file, fileList) => {
+            console.log(file)
+            fileListData.splice(0, fileListData.length)
+            fileListData.push(...fileList.map(item => item.response.data))
+        }
+
+        const openMaterial = (url) => {
+            window.open(url)
+        }
 
         return {
-            activeName,handleClick, testData, queryDetail, drawer, random, form
+            activeName,handleClick, testData, queryDetail, drawer, random, formId, formType, formReason, years, serverUrl,
+            getHeaders, submitApplication, onSuccess, onRemove, selectItem, openMaterial
         }
     }
     

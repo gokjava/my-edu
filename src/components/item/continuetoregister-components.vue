@@ -77,7 +77,7 @@
                     <!-- <canvas ref="qrcodeCanvas" style="width: 247px; height: 244px; margin-top: 71px;"></canvas> -->
                     <div style="width: 247px; height: 244px; margin: 0 auto;margin-top: 71px; padding: 18px; border: 1px solid rgb(211, 212, 212);">
                         <QRCodeVue 
-                            value="https://nps-bdc.yingxiong.com/gk2/api/client/order/v1/pay_back"
+                            :value="orderDetail.payUrl"
                             :size="240"
                             :level="'H'"
                             :background="'#ffffff'"
@@ -101,11 +101,11 @@
                         继教教育报名成功
                     </div>
                     <div style="font-size: 14px; font-weight: 400; line-height: 24px; color:rgba(144, 147, 153, 1); margin-top: 4px;">
-                        请务必在{{ yearData.find(y => y.id = selectYearId.value).learnStartDate }}-{{ yearData.find(y => y.id = selectYearId.value).learnEndDate }}学习周期内完成学习及考核
+                        请务必在{{ yearData.find(y => y.id = selectYearId).learnStartDate }}-{{ yearData.find(y => y.id = selectYearId).learnEndDate }}学习周期内完成学习及考核
                     </div>
                 </div>
                 <div style="margin-top: 40px;">
-                    <el-button style="width: 200px; height: 40px;"  type="primary" >开始学习</el-button>
+                    <el-button style="width: 200px; height: 40px;"  type="primary" @click="toStudyPage" >开始学习</el-button>
                  </div>
             </div>
             
@@ -120,7 +120,9 @@
                 destroy-on-close
                 center
             >
+                <div style="color:red; text-align:center">{{ tipMessage }}</div>
                 <div style="display: flex; justify-content: center;">
+                    
                     <video-player
                         ref="videoPlayRef"
                         :src="skVideo"
@@ -138,7 +140,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onUnmounted } from 'vue'
+import { defineComponent, ref, reactive, onUnmounted, getCurrentInstance } from 'vue'
 import imageSrc from '@/assets/continue-course.png';
 import axios from '@/axios'
 import QRCodeVue from 'qrcode.vue';
@@ -153,6 +155,10 @@ export default defineComponent({
     },
     setup() {
         const yearData = reactive([])
+        const { proxy } = getCurrentInstance()
+        const toStudyPage = () => {
+            proxy.$router.push(`/home/mycourse`)
+        }
 
         // 三种情况随机产生
         let random = ref(4) // Math.floor(Math.random() * 2)
@@ -188,9 +194,10 @@ export default defineComponent({
         const skPoster = ref('')
         const videoDialogVisible = ref(false)
         const selectVideo = (videoUrl) => {
-            skVideo.value = serverUrl + '/' + videoUrl.chapter.url
-            skPoster.value = serverUrl + '/' + videoUrl.thumb
+            skVideo.value = videoUrl.chapter.url
+            skPoster.value = videoUrl.thumb
             videoDialogVisible.value = true
+            tipMessage.value = ''
         }
         const lastTime = ref()
         const maxTimeAllowed = 5; // 3 minutes in seconds
@@ -199,6 +206,7 @@ export default defineComponent({
             const currentTime = video.currentTime;
             if (currentTime > maxTimeAllowed) {
                 video.pause();
+                tipMessage.value = '观看已结束'
             } else {
                 lastTime.value = currentTime;
             }
@@ -235,12 +243,12 @@ export default defineComponent({
                     axios.get(`/api/client/order/v1/query_status?id=${orderDetail.id}`).then(r => {
                         if (r.data.data == 2) {
                             timer = null
-                            clearInterval(timer)
+                            clearInterval(t)
                             // 成功
                             aciveIndex.value = 4
                         } else if (r.data.data > 2) {
                             timer = null
-                            clearInterval(timer)
+                            clearInterval(t)
                             // 支付失败, 返回上一步
                             aciveIndex.value = 2
                         }
@@ -257,11 +265,14 @@ export default defineComponent({
                 clearInterval(timer)
             }     
         })
+
+        const tipMessage = ref('')
         
 
         return {
             random, continueRegister, yearData, selectYearId, aciveIndex, courseList, imageSrc,selectYearById, serverUrl,
-            selectVideo, videoDialogVisible, skVideo, onSeeking, onTimeUpdate, skPoster, toBuildOrder, orderDetail, qrcodeCanvas
+            selectVideo, videoDialogVisible, skVideo, onSeeking, onTimeUpdate, skPoster, toBuildOrder, orderDetail, qrcodeCanvas,
+            tipMessage, toStudyPage
         }
     }
     

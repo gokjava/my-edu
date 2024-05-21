@@ -22,7 +22,7 @@
     </div>
 
     <div v-if="random == 2" style="width: 100%; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
-        <div style="width: 336px; text-align: center;" v-for="n in 2" :key="n" :class="`custom-print-${n}`">
+        <div style="width: 336px; text-align: center;" :class="`custom-print-${n}`">
             <div class="common-edu-img" style="width: 336px; height: 484px;  " :style="{ backgroundImage: `url(${bg1})` }">
                 <div class="common-edu-img" style="width: 283px; height: 432px; " :style="{ backgroundImage: `url(${bg2})` }">
                     <div style="width: 227px; height: 409px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 1) 50.26%, rgba(255, 255, 255, 0.7) 100%); padding-left: 16px; padding-right: 16px;">
@@ -31,14 +31,14 @@
                         </div>
                         <div style="height: 1px; width: 200px; background-color: rgba(0, 0, 0, 1); margin-top: 4px;"></div>
                         <div style="margin-top: 8px;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(0, 0, 0, 1);">
-                            2024学年专业科目学时证明
+                            {{detail.year}}学年专业科目学时证明
                         </div>
                         <div style="display: flex; font-size: 10px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(48, 49, 51, 1); margin-top: 22px;">
                             <div>
-                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:
+                                姓<span style="margin-left: 2em">名:</span>
                             </div>
                             <div>
-                                &nbsp;&nbsp;欧阳在青
+                                &nbsp;&nbsp;{{detail.name}}
                             </div>
                         </div>
                         <div style="display: flex;font-size: 10px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(48, 49, 51, 1);">
@@ -46,7 +46,7 @@
                                 资格证号:
                             </div>
                             <div>
-                                &nbsp;&nbsp;20201002623000000372
+                                &nbsp;&nbsp;{{detail.certificationNo}}
                             </div>
                         </div>
                         <div style="display: flex;font-size: 10px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(48, 49, 51, 1);">
@@ -54,16 +54,16 @@
                                 身份证号:
                             </div>
                             <div>
-                                &nbsp;&nbsp;131102198610142653
+                                &nbsp;&nbsp;{{detail.idcard}}
                             </div>
                         </div>
 
                         <div style="text-indent: 2em; margin-top: 12px; font-size: 10px;font-weight: 400;letter-spacing: 0px;line-height: 16px;color: rgba(48, 49, 51, 1); min-height: 110px; text-align: start;">
-                            依据《专业技术人员继续教育规定》、《执业药师职业资格制度规定》及有关文件要求，该同志参加了执业(从业）药师继续教育专业课培训，学习成绩合格，授予专业课60学时，计20学分。
+                            依据《专业技术人员继续教育规定》、《执业药师职业资格制度规定》及有关文件要求，该同志参加了执业(从业）药师继续教育专业课培训，学习成绩合格，授予专业课{{detail.hours}}学时，计{{detail.majorHour}}学分。
                         </div>
 
                         <div style="display: flex; margin-top: 10px; justify-content: space-between;">
-                            <div style="text-align: center;">
+                            <div style="text-align: center; width: 90px;">
                                 <img :src="qrCode" style="width: 80px; height: 80px;" />
                                 <div style="font-size: 10px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(48, 49, 51, 1);">
                                     扫一扫查验真伪
@@ -74,7 +74,7 @@
                                     黑龙江省医药零售行业协会
                                 </div>
                                 <div style="font-size: 10px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(0, 0, 0, 1);">
-                                    2024年10月20日
+                                    {{detail.grantTime}}
                                 </div>
                             </div>
                         </div>
@@ -95,62 +95,27 @@
 
 <script>
 
-import { defineComponent,ref } from 'vue'
+import { defineComponent,reactive,ref } from 'vue'
 import bg1 from '@/assets/bg1.png'
 import bg2 from '@/assets/bg2.jpg'
 import qrCode from '@/assets/test-qrcode.png'
+import axios from '@/axios'
 
-const testData = [
-    {
-        id: 1,
-        year: '2024',
-        zhuan: '60学时',
-        gong: '30学时',
-        p: '网搜'
-    }
-]
 
 export default defineComponent({
     name: 'eductionComponent',
     setup() {
-        const print = (id) => {
-            console.log(id)
-            random.value = 2
+        const detail = ref({})
+        const print = async (id) => {
+            
+            let r = await axios.get(`/api/client/certification_grant/v1/info?id=${id}`)
+            if (r.data.code == 1) {
+                detail.value = r.data.data
+                random.value = 2
+            }
         }
         const random = ref(1)
         const printEducation = () => {
-            // let element = document.getElementsByClassName(`custom-print-${n}`)[0]
-            // const printContent = element.innerHTML
-            // const printWindow = window.open('', '', 'width=800,height=600');
-            // printWindow.document.write(`
-            //     <html>
-            //     <head>
-            //         <title>Print</title>
-            //         <style>
-            //         body {
-            //             font-family: Arial, sans-serif;
-            //         }
-            //         .common-edu-img {
-            //             width: 336px;
-            //             height: 484px;
-            //             background-image: url(${bg1});
-            //             background-size: cover;
-            //             background-position: center;
-            //             display: flex;
-            //             justify-content: center;
-            //             align-items: center;
-            //         }
-            //         </style>
-            //     </head>
-            //     <body>
-            //         ${printContent}
-            //     </body>
-            //     </html>
-            // `);
-            // printWindow.document.close();
-            // printWindow.focus();
-            // printWindow.print();
-            // printWindow.close();
         }
         const download = (n) => {
             let element = document.getElementsByClassName(`custom-print-${n}`)[0]
@@ -162,8 +127,25 @@ export default defineComponent({
                 link.click();
             });
         }
+        const testData = reactive([])
+
+        const getList = async () => {
+            let r = await axios.get('/api/client/certification_grant/v1/query')
+            if (r.data.code == 1) {
+                testData.push(...r.data.data.records.map(item => {
+                    return {
+                        id: item.id,
+                        year: item.year,
+                        zhuan: item.majorHour,
+                        gong: item.minorHour,
+                        p: item.grantType == 1 ? '网授' : '面授'
+                    }
+                }))
+            }
+        }
+        getList()
         return {
-            testData, print, random, download, printEducation, bg1, bg2, qrCode
+            testData, print, random, download, printEducation, bg1, bg2, qrCode, detail
         }
     }
 })

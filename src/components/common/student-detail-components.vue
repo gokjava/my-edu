@@ -209,11 +209,62 @@ import { defineComponent, ref } from 'vue'
 import cityJson from '@/assets/citylist.json'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs';
+import axios from '@/axios'
 
 export default defineComponent({
     name: "StudentDetailComponet",
-    setup() {
+    props: {
+      needGetUserInfo: {
+        type: Boolean,
+        required: false
+      }
+    },
+    setup(props) {
+        const id = ref(null)
+        if (props.needGetUserInfo) {
+            axios.get(`/api/client/student/v1/info`).then(r => {
+              if (r.data.code == 1) {
+                // 将结果集的值赋值给 ref 变量
+                id.value = r.data.data.id
+                name.value = r.data.data.name;
+                areaProvince.value = r.data.data.areaProvince.toString();
+                idcard.value = r.data.data.idcard;
+                mailAddress.value = r.data.data.mailAddress;
+                phone.value = r.data.data.phone;
+                gender.value = r.data.data.gender;
+                mailProvince.value = r.data.data.mailProvince.toString();
+                workPlace.value = r.data.data.workPlace;
+                certificateType.value = r.data.data.certificateType;
+                graduateSchool.value = r.data.data.graduateSchool;
+                certificateNo.value = r.data.data.certificateNo;
+                graduateMajor.value = r.data.data.graduateMajor;
+                professionalTitle.value = r.data.data.professionalTitle;
+                certificateDate.value = r.data.data.certificateDate;
+                politicalOutlook.value = r.data.data.politicalOutlook;
+                certificateRange.value = r.data.data.certificateRange;
+                nation.value = r.data.data.nation;
+                email.value = r.data.data.email;
+                certificateCategory.value = r.data.data.certificateCategory
+                degree.value = r.data.data.degree
 
+                onProvinceChange(areaProvince.value).then(() => {
+                  areaCity.value = r.data.data.areaCity.toString();
+                  onCityChange(areaCity.value).then(() => {
+                    areaDistrict.value = r.data.data.areaDistrict.toString();
+                  })
+                })
+                
+
+                onMailProviceChange(mailProvince.value).then(() => {
+                  mailCity.value = r.data.data.mailCity.toString();
+                  onMailCityChange(mailCity.value).then(() => {
+                    mailDistrict.value = r.data.data.mailDistrict.toString();
+                  })
+                })
+                
+              }
+            })
+        }
         const degree = ref('')
         const certificateCategory = ref('')
         const name = ref('')
@@ -243,7 +294,7 @@ export default defineComponent({
         const cities = ref([]);
         const districts = ref([]);
 
-        const onProvinceChange = (provinceCode) => {
+        const onProvinceChange = async (provinceCode) => {
             const province = city.find(p => p.code === provinceCode);
             cities.value = province ? province.children : [];
             areaCity.value = '';
@@ -251,7 +302,7 @@ export default defineComponent({
             districts.value = [];
         };
 
-        const onCityChange = (cityCode) => {
+        const onCityChange = async (cityCode) => {
             const cityObj = cities.value.find(c => c.code === cityCode);
             districts.value = cityObj ? cityObj.children : [];
             areaDistrict.value = '';
@@ -260,7 +311,7 @@ export default defineComponent({
         const mailCities = ref([]);
         const mailDistricts = ref([]);
 
-        const onMailProviceChange = (provinceCode) => {
+        const onMailProviceChange = async (provinceCode) => {
             const province = city.find(p => p.code === provinceCode);
             mailCities.value = province ? province.children : [];
             mailCity.value = '';
@@ -268,7 +319,7 @@ export default defineComponent({
             mailDistricts.value = [];
         };
 
-        const onMailCityChange = (cityCode) => {
+        const onMailCityChange = async (cityCode) => {
             const cityObj = mailCities.value.find(c => c.code === cityCode);
             mailDistricts.value = cityObj ? cityObj.children : [];
             mailDistrict.value = '';
@@ -336,6 +387,7 @@ export default defineComponent({
             email: email.value,
             degree: degree.value,
             certificateCategory: certificateCategory.value,
+            id: id.value
           }
         }
 

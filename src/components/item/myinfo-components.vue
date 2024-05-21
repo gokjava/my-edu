@@ -2,10 +2,10 @@
     <div style="width: 100%;" class="myinfo-container">
         <el-tabs v-model="activeName" @tab-click="handleClick" justify="center">
             <el-tab-pane label="学员信息" :name="1">
-                <StudentDetail></StudentDetail>
+                <StudentDetail :needGetUserInfo="true" ref="studentDetailRef"></StudentDetail>
 
                 <div style="text-align: center;">
-                    <el-button type="primary" style="width: 180px; height: 35px; margin-top: 10px; margin-bottom: 20px;">保存更改</el-button>
+                    <el-button type="primary" style="width: 180px; height: 35px; margin-top: 10px; margin-bottom: 20px;" @click="onSubmit">保存更改</el-button>
                 </div>
             </el-tab-pane>
             <el-tab-pane label="其它信息" :name="2">
@@ -200,8 +200,19 @@ export default defineComponent({
             drawer.value = true
         }
 
+        const studentDetailRef = ref(null)
+        const onSubmit = async () => {
+            let result = studentDetailRef.value.canSubmit()
+            if (result != null) {
+                let r = await axios.post('/api/client/student/v1/modify', result)
+                if (r.data.code == 1) {
+                    ElMessage.success('修改成功')
+                }
+            } 
+        }
+
         return {
-            activeName, handleClick, itemActive, handleClick2, testData, 
+            activeName, handleClick, itemActive, handleClick2, testData, studentDetailRef,onSubmit,
             oldPassword, newPassword, confirmPassword, updatePassword, openDrawer, drawer
         }
     }
