@@ -5,6 +5,9 @@ import HomePage from '@/components/home-components'
 import AnnouncementPage from '@/components/announcement-components'
 import CameraPage from '@/components/common/camera-components'
 import OnlieExamination from '@/components/online-examination-components'
+import MainPage from '@/components/main-components'
+
+import FirstPage from '@/components/main/firstpage-components'
 
 import ConRegisterPage from '@/components/item/continuetoregister-components'
 import WorkbenchPage from '@/components/item/workbench-components'
@@ -67,6 +70,15 @@ const routes = [
         path: '/onlieExamination',
         name: 'OnlieExamination',
         component: OnlieExamination
+    }, {
+        path: '/main',
+        component: MainPage,
+        children: [
+          {
+            path: 'first',
+            component: FirstPage
+          }
+        ]
     }
   ]
   
