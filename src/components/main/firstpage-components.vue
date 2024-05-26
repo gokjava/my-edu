@@ -104,7 +104,7 @@
                     <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'rgba(23, 137, 255, 1)',  fontWeight:'600' }">
                         信息咨询
                     </div>
-                    <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);">
+                    <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(4)">
                         更多>>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             科普知识
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);">
+                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(7)">
                             更多>>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             科普视频
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);">
+                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(8)">
                             更多>>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             法律法规
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);">
+                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(11)">
                             更多>>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             法普视频
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);">
+                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(12)">
                             更多>>
                         </div>
                     </div>

@@ -22,8 +22,8 @@
     </div>
 
     <div v-if="random == 2" style="width: 100%; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
-        <div style="width: 336px; text-align: center;" :class="`custom-print-${n}`">
-            <div class="common-edu-img" style="width: 336px; height: 484px;  " :style="{ backgroundImage: `url(${bg1})` }">
+        <div style="width: 336px; text-align: center;" >
+            <div :class="`custom-print-${n}`" class="common-edu-img" style="width: 336px; height: 484px;  " :style="{ backgroundImage: `url(${bg1})` }">
                 <div class="common-edu-img" style="width: 283px; height: 432px; " :style="{ backgroundImage: `url(${bg2})` }">
                     <div style="width: 227px; height: 409px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 1) 50.26%, rgba(255, 255, 255, 0.7) 100%); padding-left: 16px; padding-right: 16px;">
                         <div style="margin-top: 32px; font-size: 18px;font-weight: 600;letter-spacing: 0px;line-height: 25.2px;color: rgba(0, 89, 169, 1);">

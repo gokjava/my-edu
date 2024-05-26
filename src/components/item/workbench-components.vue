@@ -6,7 +6,7 @@
                     {{ item.name }}
                 </div>
                 <div style="font-size: 20px; font-weight: 400; color:  rgba(48, 49, 51, 1);; margin-top: 9px;">
-                    {{ 0 }}
+                    {{ titles[item.prop] }}
                 </div>
             </div>
         </div>
@@ -20,28 +20,12 @@
                 </div>
 
                 <div style="width: 98%">
-                    <div class="workbench-item2-left-gg">
-                        <div class="workbench-item2-left-gg-left" @click="toAnnou">
-                            2024年度黑龙江省执业药师继续教育报名通知
+                    <div v-for="item in content" class="workbench-item2-left-gg" :key="item.id">
+                        <div class="workbench-item2-left-gg-left" @click="toAnnou(item.id)">
+                            {{ item.title }}
                         </div>
                         <div class="workbench-item2-left-gg-right">
-                            2024-05-01 10:10:10
-                        </div>
-                    </div>
-                    <div class="workbench-item2-left-gg">
-                        <div class="workbench-item2-left-gg-left" @click="toAnnou">
-                            2024年度黑龙江省执业药师继续教育报名通知
-                        </div>
-                        <div class="workbench-item2-left-gg-right">
-                            2024-05-01 10:10:10
-                        </div>
-                    </div>
-                    <div class="workbench-item2-left-gg">
-                        <div class="workbench-item2-left-gg-left" @click="toAnnou">
-                            2024年度黑龙江省执业药师继续教育报名通知
-                        </div>
-                        <div class="workbench-item2-left-gg-right">
-                            2024-05-01 10:10:10
+                            {{ item.postTime && item.postTime.replace('T', ' ') }}
                         </div>
                     </div>
                 </div>
@@ -106,25 +90,30 @@
 </template>
 
 <script>
-import { defineComponent, reactive, getCurrentInstance } from 'vue'
-
+import { defineComponent, reactive, getCurrentInstance, ref } from 'vue'
+import axios from '@/axios'
+// courseCount	已选择课程数	integer(int32)	
+// grantCount	以获学时证明	integer(int32)	
+// learnCourseCount	已学习课程数	integer(int32)	
+// learnCourseHour	累计学习时长	number	
+// signCount	继教报名次数	integer(int32)
 const item1Data = [
     {
         name: '继续报名次数',
-        prop: 'aa'
+        prop: 'signCount'
     },
     {
         name: '已选择课程数',
-        prop: 'aa'
+        prop: 'courseCount'
     },{
         name: '已学习课程数',
-        prop: 'aa'
+        prop: 'learnCourseCount'
     },{
         name: '累计学习时长(学时)',
-        prop: 'aa'
+        prop: 'learnCourseHour'
     },{
         name: '已获学时证明(个)',
-        prop: 'aa'
+        prop: 'grantCount'
     }
 ]
 
@@ -136,27 +125,37 @@ export default defineComponent({
     components: {
     },
     setup() {
+        const titles = ref({})
+        axios.get('/api/client/course/v1/my_anlysis').then(r => {
+            if (r.data.code == 1) {
+                titles.value = r.data.data
+            }
+        })
+        const content = reactive([])
+        axios.get(`/api/client/first_page/v1/posters_list?cid=1&pageSize=3`).then(r => {
+            content.push(...r.data.data.records)
+        })
         const useData = reactive([
             {
                 title: '学习流程',
                 desc: '新学员提交注册信息后，等待审核（工作日24小时内）；登录服务平台；点击继教报名；选课，报名，缴费；点击继续教育学习，进行视频学习；考试通过，在学时查询中下载学时。',
                 select: false
             },{
-                title: '学习流程',
-                desc: '新学员提交注册信息后，等待审核（工作日24小时内）；登录服务平台；点击继教报名；选课，报名，缴费；点击继续教育学习，进行视频学习；考试通过，在学时查询中下载学时。',
+                title: '开票流程',
+                desc: '',
                 select: false
             },{
-                title: '学习流程',
-                desc: '新学员提交注册信息后，等待审核（工作日24小时内）；登录服务平台；点击继教报名；选课，报名，缴费；点击继续教育学习，进行视频学习；考试通过，在学时查询中下载学时。',
+                title: '课程观看须知',
+                desc: '',
                 select: false
             }
         ])
         const { proxy } = getCurrentInstance();
-        const toAnnou = () => {
-            proxy.$router.push('/announcement');
+        const toAnnou = (id) => {
+            proxy.$router.push(`/announcement?id=${id}`);
         }
         return {
-            item1Data, useData, toAnnou
+            item1Data, useData, toAnnou, titles, content
         }
     }
     

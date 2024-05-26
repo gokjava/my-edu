@@ -100,8 +100,8 @@ export default defineComponent({
             if (r.data.code == 1) {
                 console.log(r.data)
                 // 存储localStorage
-                localStorage.setItem('token', r.data.data.data.token)
-                if (!r.data.data.data.user.isInitPassword) {
+                localStorage.setItem('token', r.data.data.token)
+                if (!r.data.data.user.isInitPassword) {
                     ElMessageBox.alert('请您修改密码，否则会存在安全问题；请到 我的信息-其它信息-修改密码 处修改', '提示', {
                         confirmButtonText: 'OK',
                         callback: () => {
@@ -122,10 +122,10 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 
 body {
-    background-color: rgba(236, 245, 255, 1) ;
+    background-color: rgba(236, 245, 255, 1);
 }
 
 .menus {

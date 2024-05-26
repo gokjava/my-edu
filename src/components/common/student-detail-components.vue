@@ -387,8 +387,13 @@ export default defineComponent({
             email: email.value,
             degree: degree.value,
             certificateCategory: certificateCategory.value,
-            id: id.value
+            id: id.value,
+            areaSummary: `${getName(cityJson, areaProvince.value)}-${getName(cities.value, areaCity.value)}-${getName(districts.value, areaDistrict.value)}`
           }
+        }
+
+        const getName = (rows, code) => {
+            return rows.find(item => item.code == code).name
         }
 
         return {
