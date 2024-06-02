@@ -274,15 +274,15 @@ export default defineComponent({
         const updatePassword = async () => {
 
             // 校验新密码和确认密码是否一致
-            let newPassword = doubleMd5Reversed(newPassword.value)
-            let confirmPassword = doubleMd5Reversed(confirmPassword.value)
-            if (newPassword != confirmPassword) {
-                ElMessage({
-                    message: '确认密码和新密码不一致',
-                    type: 'waning',
-                })
-                return
-            }
+            // let newPassword = doubleMd5Reversed(newPassword.value)
+            // let confirmPassword = doubleMd5Reversed(confirmPassword.value)
+            // if (newPassword != confirmPassword) {
+            //     ElMessage({
+            //         message: '确认密码和新密码不一致',
+            //         type: 'waning',
+            //     })
+            //     return
+            // }
 
             let r = await axios.post('/api/client/student/v1/modify_password', {
                 "confirmPassword": doubleMd5Reversed(confirmPassword.value),
