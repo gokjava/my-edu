@@ -21,7 +21,7 @@
             <div v-if="aciveIndex == 1">
                 <div  style="margin-top: 78px; display: flex; justify-content: center;">
                     <div @click="selectYearId = item.id" class="continue-radio" v-for="(item, index) in yearData" :key="item.id" :style="{ marginLeft: index > 0 ? '37px' : '0px',  border : selectYearId == item.id ? '1px solid rgba(64, 158, 255, 1)' : '1px solid rgba(220, 223, 230, 1)'} " >
-                        <div class="continue-radio-quan" :style="{border : selectYearId == item.id ? '1px solid rgba(64, 158, 255, 1)' : '1px solid rgba(220, 223, 230, 1)'}">
+                        <div class="continue-radio-quan" :class="{ 'bg-color-primary-brand-10' : selectYearId == item.id }" :style="{border : selectYearId == item.id ? '1px solid rgba(64, 158, 255, 1)' : '1px solid rgba(220, 223, 230, 1)'}">
 
                         </div>
                         <div style="margin-top: 31px; font-size: 20px; font-weight: 400; line-height: 28px;" :class="{ 'isActiveRadioClass':  selectYearId == item.id}">
@@ -42,7 +42,8 @@
                     <div class="continue-course-item" v-for="(item, index) in courseList" :key="item.id" :style="{ marginTop: index > 0 ? '16px' : '0px' }">
                         <div style="display: flex; justify-content: space-between;">
                             <div style="display: flex;">
-                                <img :src="serverUrl + '/' + item.thumb" style="width: 80px; height: 60px;" />
+                                <!-- <img :src="serverUrl + '/' + item.thumb" style="width: 80px; height: 60px;" /> -->
+                                <ImgTextCommonPage :width="80" :height="60" :img="item.thumb" :text="item.type == 1 ? '专业课' : '公需课'" :fontSize="14"></ImgTextCommonPage>
                                 <div style="margin-left: 16px;">
                                     <div style="font-size: 16px; font-weight: 400; color: rgba(48, 49, 51, 1); line-height: 24px;">
                                         {{ item.title }}
@@ -96,7 +97,7 @@
 
             <div v-if="aciveIndex == 4" style="width: 100%; text-align: center;">
                 <div>
-                    <img src="@/assets/continue-success.png" style="width: 63px; height: 63px; margin-top: 134px;"/>
+                    <el-icon size="63" style="margin-top: 134px;" color="green"><SuccessFilled /></el-icon>
                     <div style="font-size: 16px; font-weight: 400; line-height: 25px; color: rgba(19, 20, 20, 1); margin-top: 21px;">
                         继教教育报名成功
                     </div>
@@ -141,6 +142,7 @@
 
 <script>
 import { defineComponent, ref, reactive, onUnmounted, getCurrentInstance } from 'vue'
+import ImgTextCommonPage from '@/components/common/img-text-common'
 import imageSrc from '@/assets/continue-course.png';
 import axios from '@/axios'
 import QRCodeVue from 'qrcode.vue';
@@ -151,17 +153,17 @@ export default defineComponent({
 
     name: "ContinueRetisger",
     components: {
-        QRCodeVue
+        QRCodeVue, ImgTextCommonPage
     },
     setup() {
         const yearData = reactive([])
         const { proxy } = getCurrentInstance()
         const toStudyPage = () => {
-            proxy.$router.push(`/home/mycourse`)
+            proxy.$router.push(`/main/mycourse`)
         }
 
         // 三种情况随机产生
-        let random = ref(4) // Math.floor(Math.random() * 2)
+        let random = ref(0) // Math.floor(Math.random() * 2)
         const continueRegister = () => {
             random.value = 4
         }
@@ -173,6 +175,7 @@ export default defineComponent({
                     random.value = 0
                 } else {
                     selectYearId.value = yearData[0].id
+                    random.value = 4
                 }
             }
         })

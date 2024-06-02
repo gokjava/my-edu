@@ -19,7 +19,7 @@
                     学习通道已关闭
                 </div>
                 <div style="font-size: 20px; font-weight: 700; line-height: 28px; color: rgba(48, 49, 51, 1); text-align: center;">
-                    {{ item.year }} 学年继续教育
+                    {{ item.year }} <span style="color: var(--el-menu-text-color); font-weight: 400;">学年继续教育</span>
                 </div>
                 <div style="font-size: 12px; font-weight: 400; line-height: 22px; color: rgba(96, 98, 102, 1); margin-top: 4px; text-align: center;">
                     学习周期： {{ item.learnStartDate }}
@@ -169,7 +169,11 @@
             <div style="margin-top: 16px; flex-wrap: wrap;  display: flex; gap: 29px;">
                 <div v-for="(item, index) in courseData" :key="item.id" class="course-card">
                     <div style="width: 242px;margin-top: 16px; ">
-                        <img :src="item.img" style="width: 242px; height: 112px; margin-top: 16px; " />
+                        <!-- <img :src="item.img" style="width: 242px; height: 112px; margin-top: 16px; " /> -->
+                        <div style="margin-top: 16px;">
+                            <ImgTextCommonPage :width="242" :height="112" :text="menuIndex == 1 ? '专业科目' : '公需科目'" :img="item.thumb"></ImgTextCommonPage>
+                        </div>
+                        
                         <div style="margin-top: 12px; min-height: 48px; font-size: 16px; font-weight: 400; line-height: 24px; color: rgba(48, 49, 51, 1); width: 242px;">
                             {{ item.title }}
                         </div>
@@ -409,16 +413,20 @@
 <script>
 
 import { defineComponent, ref, getCurrentInstance, computed, onUnmounted, reactive, nextTick } from 'vue'
+import ImgTextCommonPage from '@/components/common/img-text-common'
 import { getServerUrl } from '@/components/common/constant'
 import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 const serverUrl = getServerUrl()
 import axios from '@/axios'
 
 export default defineComponent({
     name: "MycoursePage",
     components: {
+        ImgTextCommonPage
     },
     setup() {
+        const router = useRouter()
         const courseList = reactive([])
         axios.get('/api/client/course/v1/my_course').then(r => {
             // console.log(r.data)
@@ -431,11 +439,12 @@ export default defineComponent({
             console.log(courseList)
         })
 
-        const  { emit, proxy } = getCurrentInstance()
+        const  { proxy } = getCurrentInstance()
 
         const random = ref(1)
         const continueRegister = () => {
-            emit('to-continue-register', true)
+            // emit('to-continue-register', true)
+            router.push('/main/con')
         }
 
         const progressStrokeDasharray = computed(() => {
@@ -823,6 +832,10 @@ export default defineComponent({
         }
 
         const savepj = async () => {
+            if (teacherScore.value == 0 ||summaryScore.value == 0 ||  courseScore.value == 0) {
+                ElMessage.error('所有评价必须打分')
+                return
+            }
             let r = await axios.post('/api/client/course/v1/evaluate', {
                 cid: selectCourseNew.value.cid,
                 content: content.value,
@@ -835,6 +848,7 @@ export default defineComponent({
                 summaryScore.value = 0
                 courseScore.value = 0
                 content.value = ''
+                ElMessage.success('保存评价成功')
             }
         }
 

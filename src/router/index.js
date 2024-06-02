@@ -1,25 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginPage from '@/components/login-components'
-import RegisterPage from '@/components/register-components'
-import HomePage from '@/components/home-components'
-import AnnouncementPage from '@/components/announcement-components'
-import CameraPage from '@/components/common/camera-components'
-import OnlieExamination from '@/components/online-examination-components'
-import MainPage from '@/components/main-components'
+// 使用懒加载方式导入组件
+const LoginPage = () => import('@/components/login-components')
+const RegisterPage = () => import('@/components/register-components')
+const HomePage = () => import('@/components/home-components')
+const AnnouncementPage = () => import('@/components/announcement-components')
+const CameraPage = () => import('@/components/common/camera-components')
+const OnlieExamination = () => import('@/components/online-examination-components')
+const MainPage = () => import('@/components/main-components')
 
-import FirstPage from '@/components/main/firstpage-components'
+const FirstPage = () => import('@/components/main/firstpage-components')
+const SecondPage = () => import('@/components/main/main-details')
+const MainListPage = () => import('@/components/main/main-list')
 
-import ConRegisterPage from '@/components/item/continuetoregister-components'
-import WorkbenchPage from '@/components/item/workbench-components'
-import MycoursePage from '@/components/item/mycourse-components'
-import ReductionPage from '@/components/item/reduction-components'
-import EductionPage from '@/components/item/education-components'
-import OrderPage from '@/components/item/order-components'
-import MyInfoPage from '@/components/item/myinfo-components'
+const ConRegisterPage = () => import('@/components/item/continuetoregister-components')
+const WorkbenchPage = () => import('@/components/item/workbench-components')
+const MycoursePage = () => import('@/components/item/mycourse-components')
+const ReductionPage = () => import('@/components/item/reduction-components')
+const EductionPage = () => import('@/components/item/education-components')
+const OrderPage = () => import('@/components/item/order-components')
+const MyInfoPage = () => import('@/components/item/myinfo-components')
 
 const routes = [
     {
-      path: '/',
+      path: '/login',
       name: 'LoginPage',
       component: LoginPage
     },{
@@ -27,9 +30,10 @@ const routes = [
         name: 'RegisterPage',
         component: RegisterPage
     },{
-        path: '/home',
+        path: '/main',
         name: 'HomePage',
         component: HomePage,
+        redirect: '/main/workbench',
         children: [
             {
                 path: 'con',
@@ -70,21 +74,60 @@ const routes = [
         path: '/onlieExamination',
         name: 'OnlieExamination',
         component: OnlieExamination
+    },{
+      path: '/',
+      component: MainPage,
+      redirect: '/home'
     }, {
-        path: '/main',
+        path: '/home',
         component: MainPage,
         children: [
           {
+            path: '',
+            component: FirstPage
+          },{
             path: 'first',
             component: FirstPage
+          },{
+            path: 'conEdu',
+            component: SecondPage
+          },{
+            path: 'register',
+            component: SecondPage
+          },{
+            path: 'info',
+            component: SecondPage
+          },{
+            path: 'zcfg',
+            component: SecondPage
+          },{
+            path: 'xscx',
+            component: SecondPage
+          },{
+            path: 'lxwm',
+            component: SecondPage
+          },{
+            path: 'item',
+            component: SecondPage
+          },{
+            path: 'list',
+            component: MainListPage
           }
         ]
     }
   ]
+
   
   const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        return { top: 0 }
+      }
+    }
   })
   
   export default router

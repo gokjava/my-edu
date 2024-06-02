@@ -1,12 +1,12 @@
 <template>
     <div v-show="random == 1">
-        <div style="width: 100%; display: flex; justify-content: space-between;">
+        <div style="width: 100%; display: flex; justify-content: space-between; margin-top: 32px;">
             <div style="width: 288px;height: 288px; display: flex; flex-direction: column; justify-content: space-between;">
-                <div style="width: 100%; height: 60px; background: rgba(255, 138, 0, 1); display: flex; align-items: center;">
+                <div style="width: 100%; height: 60px; background: rgba(255, 138, 0, 1); display: flex; align-items: center; cursor: pointer;" @click="toHome">
                     <div style="height: 32px; width: 32px; display: flex; justify-content: center; align-items: center; padding-left: 14px; padding-right: 14px; cursor: pointer;">
                         <TajMahal theme="outline" size="30" fill="#ffffff" :strokeWidth="2" style="padding-top: 3px"/>
                     </div>
-                    <div style="font-size: 16px;font-weight: 400;letter-spacing: 0px;line-height: 24px;color: rgba(255, 255, 255, 1);">
+                    <div style="font-size: 16px;font-weight: 400;letter-spacing: 0px;line-height: 24px;color: rgba(255, 255, 255, 1); " >
                         执业药师继续教育
                     </div>
                 </div>
@@ -38,10 +38,13 @@
                 </div>
             </div>
 
-            <div style="width: 432px;height: 288px; ">
-                <el-carousel height="auto" autoplay v-if="swiperList && swiperList.length > 0">
-                    <el-carousel-item style="width: 432px;height: 288px; " v-for="(item, index) in swiperList" :key="index">
+            <div class="display-main-pmd" style="width: 432px;height: 288px; position: relative">
+                <el-carousel  height="auto" autoplay v-if="swiperList && swiperList.length > 0">
+                    <el-carousel-item  style="width: 432px;height: 288px; " v-for="(item, index) in swiperList" :key="index">
                         <img :src="item.thumb" style="width: 432px;height: 288px; cursor: pointer;" @click="openNewWindow(item.redirectUrl)"/>
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; background-color: rgba(0, 0, 0, 0.5); color: white; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(255, 255, 255, 1);">
+                            {{ item.title }}
+                        </div>
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -50,13 +53,23 @@
                 <div style="width: 384px;margin-top: 16px; display: flex;">
 
                     <div v-if="tzgg && tzgg.length > 0" style="font-size: 18px;font-weight: 600;letter-spacing: 0px;line-height: 32px;color: rgba(48, 49, 51, 1); overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;"> 
-                        <jinritoutiao theme="outline" size="30" fill="rgba(255, 87, 51, 1)" :strokeWidth="2" style="position: relative; top: 9px;" /> {{ tzgg[0].title }}
+                        <el-tag
+                            type="danger"
+                            effect="dark"
+                            style="font-size: 14px; font-weight: 400;"
+                        >
+                            头条
+                        </el-tag>
+                        <span @click="toDetail(tzgg[0])" style="cursor: pointer; padding-left: 5px;">
+                            {{ tzgg[0].title }}
+                        </span>
+                        
                     </div>
                 </div>
                 <div class="main-item1"  v-if="tzgg && tzgg.length > 1">
-                    <div v-for="(item, n) in tzgg" :key="n" style="width: 384px; display: flex; justify-content: space-between; align-items: center; margin-top: 18px;" >
+                    <div v-for="(item, n) in tzgg" :key="n" style="width: 384px; display: flex; justify-content: space-between; align-items: center; " :style="{ marginTop: n == 1 ? '0px' : '18px' }" >
                         <div v-if="n > 0" style="width: 4px;height: 4px;opacity: 1;background: rgba(82, 155, 46, 1);"></div>
-                        <div v-if="n > 0" style="width: 324px;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <div v-if="n > 0" style="width: 324px;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;cursor: pointer;" @click="toDetail(item)">
                             {{ item.title }}
                         </div>
                         <div v-if="n > 0" style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(96, 98, 102, 1);">
@@ -66,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div :style="{marginTop: '28px', backgroundImage: `url(${main1})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 36px;color: rgba(255, 255, 255, 1);">
+        <div :style="{marginTop: '28px', backgroundImage: `url(${main1})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 36px;color: rgba(255, 255, 255, 1); cursor: pointer; " @click="toHome">
             执(从)业药师继续教育入口
         </div>
         <div :style="{marginTop: '28px', backgroundImage: `url(${main2})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; text-shadow: 0px 0px 6px  rgba(0, 0, 0, 0.25);font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 40px;color: rgba(255, 255, 255, 1);">
@@ -89,11 +102,11 @@
                         <div class="main-abcd" :style="{ boxShadow: clickMainIndex == 1 ? '0 1px 0 0 rgba(64, 158, 255, 1)' : '', color : clickMainIndex == 1 ? 'rgba(23, 137, 255, 1)' : 'black', fontWeight: clickMainIndex == 1 ? '600' : '400'}" @click="switchIndex(1)">
                             继续教育
                         </div>
-                        <div class="main-abcd" :style="{ boxShadow: clickMainIndex == 2 ? '0 1px 0 0 rgba(64, 158, 255, 1)' : '', color : clickMainIndex == 2 ? 'rgba(23, 137, 255, 1)' : 'black', fontWeight: clickMainIndex == 1 ? '600' : '400'}" @click="switchIndex(2)">
+                        <div class="main-abcd" :style="{ boxShadow: clickMainIndex == 2 ? '0 1px 0 0 rgba(64, 158, 255, 1)' : '', color : clickMainIndex == 2 ? 'rgba(23, 137, 255, 1)' : 'black', fontWeight: clickMainIndex == 2 ? '600' : '400'}" @click="switchIndex(2)">
                             政策法规
                         </div>
                     </div>
-                    <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore( clickMainIndex == 1 ? 3:5)">
+                    <div class="main-firstpage-more" @click="showMore( clickMainIndex == 1 ? 3:5,clickMainIndex == 1?'继续教育':'政策法规' )">
                         更多>>
                     </div>
                 </div>
@@ -102,9 +115,9 @@
             <div style="width: 433px; height: 284px" class="main-item1">
                 <div style="width: 100%; height: 40px; display: flex; background: linear-gradient(90deg, rgba(198, 226, 255, 1) 0%, rgba(198, 226, 255, 0) 100%); justify-content: space-between;align-items: center;">
                     <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'rgba(23, 137, 255, 1)',  fontWeight:'600' }">
-                        信息咨询
+                        信息资讯
                     </div>
-                    <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(4)">
+                    <div  class="main-firstpage-more" @click="showMore(4, '信息资讯')">
                         更多>>
                     </div>
                 </div>
@@ -131,7 +144,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             科普知识
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(7)">
+                        <div class="main-firstpage-more"  @click="showMore(7, '科普知识')">
                             更多>>
                         </div>
                     </div>
@@ -144,13 +157,17 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             科普视频
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(8)">
+                        <div  class="main-firstpage-more" @click="showMore(8, '科普视频')">
                             更多>>
                         </div>
                     </div>
 
-                    <div>
-                        <img src="https://img.js.design/assets/smartFill/img431164da758808.jpg"  style="width: 408px; height: 212px; margin-top: 24px;"/>
+                    <div style="width: 408px; height: 212px; margin-top: 24px;">
+                        <el-carousel  height="auto" autoplay v-if="kpsp && kpsp.length > 0">
+                            <el-carousel-item  style=" width:408px; height: 212px; " v-for="(item, index) in kpsp" :key="index">
+                                <img :src="item.thumb" style="width: 408px; height: 212px;cursor: pointer;" @click="toDetail(item)"/>
+                            </el-carousel-item>
+                        </el-carousel>
                     </div>
                     
                 </div>
@@ -172,7 +189,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             法律法规
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(11)">
+                        <div class="main-firstpage-more" @click="showMore(11, '法律法规')">
                             更多>>
                         </div>
                     </div>
@@ -184,13 +201,18 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             法普视频
                         </div>
-                        <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);" @click="showMore(12)">
+                        <div  class="main-firstpage-more" @click="showMore(12, '法普视频')">
                             更多>>
                         </div>
                     </div>
 
-                    <div>
-                        <img src="https://img.js.design/assets/smartFill/img431164da758808.jpg"  style="width: 408px; height: 212px; margin-top: 24px;"/>
+                    <div style="width: 408px; height: 212px; margin-top: 24px;">
+                        <!-- <img src="https://img.js.design/assets/smartFill/img431164da758808.jpg"  style="width: 408px; height: 212px; margin-top: 24px;"/> -->
+                        <el-carousel  height="auto" autoplay v-if="fpsp && fpsp.length > 0">
+                            <el-carousel-item  style=" width:408px; height: 212px; " v-for="(item, index) in fpsp" :key="index">
+                                <img :src="item.thumb" style="width: 408px; height: 212px;cursor: pointer;" @click="toDetail(item)"/>
+                            </el-carousel-item>
+                        </el-carousel>
                     </div>
                     
                 </div>
@@ -206,16 +228,22 @@ import MainItemPage from '@/components/common/main-item-components'
 import MainListPage from '@/components/common/main-list-components'
 import {ref, reactive, defineProps, watch} from 'vue'
 import axios from '@/axios'
-import { TajMahal, PeoplesTwo,PeopleBottomCard, Jinritoutiao  } from '@icon-park/vue-next';
+import { TajMahal, PeoplesTwo,PeopleBottomCard  } from '@icon-park/vue-next';
 import main1 from '@/assets/main/main-1.png'
 import main2 from '@/assets/main/main-2.png'
 import main3 from '@/assets/main/main-3.png'
 import main4 from '@/assets/main/main-4.png'
 import main5 from '@/assets/main/main-5.png'
+import { useRouter } from 'vue-router'
+import { commonToDetail } from '@/components/common/common'
+
 const props = defineProps({
     selectType: Number
 })
 
+const toHome = () => {
+    router.push('/login')
+}
 
 watch(
     () => props.selectType,
@@ -233,15 +261,16 @@ watch(
 const cid = ref(0)
 const mainList = reactive([])
 const totalCount = ref(0)
-const showMore=(id, currentPage) => {
+const showMore=(id, tag) => {
     cid.value = id
-    axios.get(`/api/client/first_page/v1/posters_list?cid=${id}&pageSize=6${currentPage ? '&page=' + currentPage : ''}`).then(r => {
-        console.log(r.data)
-        random.value = 2
-        mainList.splice(0, mainList.length)
-        mainList.push(...r.data.data.records)
-        totalCount.value = r.data.data.total
-    })
+    router.push(`/home/list?cid=${id}&tag=${tag}`)
+    // axios.get(`/api/client/first_page/v1/posters_list?cid=${id}&pageSize=6${currentPage ? '&page=' + currentPage : ''}`).then(r => {
+    //     console.log(r.data)
+    //     random.value = 2
+    //     mainList.splice(0, mainList.length)
+    //     mainList.push(...r.data.data.records)
+    //     totalCount.value = r.data.data.total
+    // })
 }
 
 
@@ -290,6 +319,16 @@ axios.get(`/api/client/first_page/v1/posters_list?cid=1&pageSize=6`).then(r => {
     tzgg.push(...r.data.data.records)
 })
 
+const kpsp = reactive([])
+axios.get(`/api/client/first_page/v1/posters_list?cid=8&pageSize=6`).then(r => {
+    kpsp.push(...r.data.data.records)
+})
+
+const fpsp = reactive([])
+axios.get(`/api/client/first_page/v1/posters_list?cid=12&pageSize=6`).then(r => {
+    fpsp.push(...r.data.data.records)
+})
+
 const getDateStr = (dateString) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-11
@@ -299,6 +338,11 @@ const getDateStr = (dateString) => {
 }
 
 let random = ref(1)
+
+const router = useRouter()
+const toDetail = (item) => {
+    commonToDetail(router, item)
+}
 
 </script>
 
@@ -322,6 +366,14 @@ let random = ref(1)
     font-weight: 600;
     letter-spacing: 0px;
     line-height: 24px;
+}
+
+.display-main-pmd ul {
+    display: none;
+}
+.main-firstpage-more {
+    cursor: pointer;
+    font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);
 }
 
 </style>

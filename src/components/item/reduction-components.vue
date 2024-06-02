@@ -58,7 +58,7 @@
                     减免类型
                 </div>
                 <div class="item-right">
-                    {{ selectItem.type == 1 ? '专业' : '共需' }}
+                    {{ selectItem.type == 1 ? '专业' : '公需' }}
                 </div>
             </div>
             <div style="display: flex;width: 100%; margin-top: 12px;">
@@ -145,7 +145,7 @@
                     :show-file-list="true"
                     :limit="10"
                     :multiple="true"
-                    :headers="getHeaders"
+                    :headers=" {Authorization: tokenRef}"
                     :on-success="onSuccess"
                     :on-remove="onRemove"
                 >
@@ -216,6 +216,7 @@ export default defineComponent({
         })
 
         const getHeaders = () => {
+            console.log('-------------', localStorage.getItem('token'))
             return {
                 Authorization: localStorage.getItem('token')
             }
@@ -230,6 +231,10 @@ export default defineComponent({
             }
             if (!formType.value) {
                 ElMessage.error('请选择减免类型')
+                return
+            }
+            if (!fileListData || fileListData.length == 0) {
+                ElMessage.error('请上传辅佐材料')
                 return
             }
             let r = await axios.post('/api/client/course_reduce/v1/submit', {
@@ -255,7 +260,7 @@ export default defineComponent({
                     ...item,
                     "id": item.id,
                     "year": item.year,
-                    "exemptionType": item.type == 1 ? '专业' : '共需',
+                    "exemptionType": item.type == 1 ? '专业' : '公需',
                     "reason": item.reason,
                     "applicationTime": item.createTime,
                     "status": item.status == 1 ? '待审核' : item.status == 2 ? '审核通过' : '审核不通过',
@@ -280,9 +285,11 @@ export default defineComponent({
             window.open(url)
         }
 
+        const tokenRef = ref(localStorage.getItem('token'))
+
         return {
             activeName,handleClick, testData, queryDetail, drawer, random, formId, formType, formReason, years, serverUrl,
-            getHeaders, submitApplication, onSuccess, onRemove, selectItem, openMaterial
+            getHeaders, submitApplication, onSuccess, onRemove, selectItem, openMaterial, tokenRef
         }
     }
     

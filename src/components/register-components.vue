@@ -21,7 +21,7 @@
         </div>
       </div>
   
-      <div style="margin-top: 14px;">
+      <div style="margin-top: 14px; ">
         <StudentDetail ref="studentDetailRef"></StudentDetail>
       </div>
   
@@ -97,17 +97,15 @@
         if (result != null) {
           let r = await http.post('/api/client/student/v1/register', result)
           registerSuccess.value = r.data.code == 1
-        } else {
-          registerSuccess.value = false
+          dialogVisible.value = true
         }
-        dialogVisible.value = true
       }
 
       
       const { proxy } = getCurrentInstance();
 
       const toLogin = () => {
-            proxy.$router.push('/');
+            proxy.$router.push('/login');
         }
 
   
@@ -122,7 +120,7 @@
   })
   </script>
 
-<style>
+<style scoped>
 body {
     background-color: rgba(236, 245, 255, 1) ;
 }
@@ -141,7 +139,7 @@ body {
 }
 
 .register-container {
-    width: 964px;
+    width: 1200px;
     margin: 0 auto;
     background: rgba(255, 255, 255, 1);;
     margin-top: 51px;
@@ -159,7 +157,7 @@ body {
     }
 
     .register-know {
-        width: 915px;
+        width: 1120px;
         height: 159px;
         margin: 0 auto;
         opacity: 1;
@@ -188,5 +186,6 @@ body {
         }
     }
 }
+
 
 </style>

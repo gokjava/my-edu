@@ -2,7 +2,7 @@
     <div v-for="(item, n) in props.jxjy" :key="n" style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 18px;">
         <div style="display: flex; align-items: center;">
             <div style="width: 4px;height: 4px;opacity: 1;background: rgba(82, 155, 46, 1); margin-right: 8px;"></div>
-            <div style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" :style="{ width: `${width}px` }" >
+            <div style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" :style="{ width: `${width}px` }" @click="toQueryDetail(item)" >
                 {{ item.title }}
             </div>
         </div>
@@ -15,6 +15,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 const props = defineProps({
     jxjy: Array,
     width: Number
@@ -26,6 +27,11 @@ const getDateStr = (dateString) => {
     const day = String(date.getDate()).padStart(2, '0');
     const formattedDate = `${month}-${day}`;
     return formattedDate
+}
+const router = useRouter()
+
+const toQueryDetail = (item) => {
+    router.push('/home/item?id=' + item.id)
 }
 
 </script>

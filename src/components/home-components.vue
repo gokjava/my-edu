@@ -5,13 +5,27 @@
         <div class="home-body">
             <div class="home-body-left">
                 <div class="home-body-left-container">
-                    <div class="home-body-left-img" :style="{ backgroundColor: extractColorByName().background, color: extractColorByName().text }">
-                        {{ name[0] }}
+                    <div>
+                        <div class="home-body-left-img" :style="{ backgroundColor: extractColorByName().background, color: extractColorByName().text }">
+                            {{ name[0] }}
+                        </div>
+                        <div style="margin-top: 12px; text-align: center; font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(0, 0, 0, 0.6);">
+                            {{ name }}
+                        </div>
+                        <div class="home-body-left-menu">
+                            <div>
+                                <div v-for="item in menus" :key="item.index" class="home-body-left-menu-item" :class="{ 'home-body-left-menu-item-isActive': isActive == item.index }" :style="{ color: isActive == item.index ? 'rgba(64, 158, 255, 1)' : 'rgba(96, 98, 102, 1)' }" @click="selectMenu(item)">
+                                    <!-- <MoreApp :size="20" theme="filled" style="padding-top: 5px; padding-left: 50px;"/>  -->
+                                    <component :is="item.icon" :size="20" :strokeWidth="1" style="padding-top: 5px; padding-left: 50px;"/>&nbsp;&nbsp;&nbsp;{{ item.name }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="home-body-left-menu">
-                        <div v-for="item in menus" :key="item.index" class="home-body-left-menu-item" :class="{ 'home-body-left-menu-item-isActive': isActive == item.index }" @click="selectMenu(item)">
-                            <MoreApp :size="20" theme="filled" style="padding-top: 5px; padding-left: 50px;"/> &nbsp;&nbsp;&nbsp;{{ item.name }}
+                    <div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+                        <div class="home-gradient-dashed-line"></div>
+                        <div style="margin-top: 6px;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(144, 147, 153, 1);">
+                            版本：v1.0
                         </div>
                     </div>
                 </div>
@@ -21,83 +35,80 @@
                 <div style="margin-top: 24px; font-size: 20px; font-weight: 600; line-height: 28px; padding-bottom: 32px;">
                     {{ menus[isActive].name }}
                 </div>
-                <!-- <WorkbenchPage v-if="isActive == 0"></WorkbenchPage>
-                <ContinuePage v-if="isActive == 1"></ContinuePage>
-                <MycoursePage @to-continue-register="toContinueRegister" v-if="isActive == 2"></MycoursePage>
-                <ReductionPage v-if="isActive == 3"></ReductionPage>
-                <EductionPage v-if="isActive == 4"></EductionPage>
-                <OrderPage v-if="isActive == 5"></OrderPage>
-                <MyInfoPage v-if="isActive == 6"> </MyInfoPage> -->
                 <router-view></router-view>
             </div>
         </div>
     </div>
 </template>
-
 <script>
-import { defineComponent, ref  } from 'vue'
-import { MoreApp } from '@icon-park/vue-next'
+import { defineComponent, ref, watch } from 'vue'
+import TitlePage from '@/components/common/title-components'
+import { ElMessageBox } from 'element-plus'
+import { MoreApp, Announcement, System, Book, Schedule,  BachelorCapOne,ListView, DataUser, Logout } from '@icon-park/vue-next'
 import { useRoute, useRouter } from 'vue-router';
-
 const backgroundColors = [
     { background: '#f56a00', text: '#FFFFFF' },
-    { background: '#7BC616', text: '#000000' },
-    { background: '#14C9C9', text: '#000000' },
+    { background: '#7BC616', text: '#FFFFFF' },
+    { background: '#14C9C9', text: '#FFFFFF' },
     { background: '#168CFF', text: '#FFFFFF' },
     { background: '#FF7D00', text: '#FFFFFF' },
-    { background: '#FFC72E', text: '#000000' },
+    { background: '#FFC72E', text: '#FFFFFF' },
     { background: '#7265e6', text: '#FFFFFF' },
-    { background: '#ffbf00', text: '#000000' },
-    { background: '#00a2ae', text: '#000000' },
+    { background: '#ffbf00', text: '#FFFFFF' },
+    { background: '#00a2ae', text: '#FFFFFF' },
 ];
-
 const menus = [
     {
         index: 0,
-        icon: '',
+        icon: Announcement,
         name: '工作台',
-        path: 'home/workbench'
+        path: 'main/workbench'
     },
     {
         index: 1,
-        icon: '',
+        icon: System,
         name: '继教报名',
-        path: 'home/con'
+        path: 'main/con'
     },{
         index: 2,
-        icon: '',
+        icon: Book,
         name: '我的课程',
-        path: 'home/mycourse'
+        path: 'main/mycourse'
     },{
         index: 3,
-        icon: '',
+        icon: Schedule,
         name: '学时减免',
-        path: 'home/hour'
+        path: 'main/hour'
     },{
         index: 4,
-        icon: '',
+        icon: BachelorCapOne,
         name: '学时证明',
-        path: 'home/eduction'
+        path: 'main/eduction'
     },{
         index: 5,
-        icon: '',
+        icon: ListView,
         name: '我的订单',
-        path: 'home/order'
+        path: 'main/order'
     },{
         index: 6,
-        icon: '',
+        icon: DataUser,
         name: '我的信息',
-        path: 'home/myinfo'
+        path: 'main/myinfo'
+    },{
+        index: 7,
+        icon: Logout,
+        name: '退出系统',
     }
-]
 
+
+    
+]
 
 export default defineComponent({
 
     name: "HomePage",
     components: {
-        MoreApp, 
-        // WorkbenchPage, ContinuePage, MycoursePage, TitlePage, ReductionPage, EductionPage, OrderPage, MyInfoPage
+        MoreApp, Announcement, System, Book, Schedule,  BachelorCapOne,ListView, DataUser, Logout, TitlePage
     },
     setup() {
 
@@ -113,13 +124,34 @@ export default defineComponent({
             }
         }
         
-        const name = ref('高鲲')
+        const name = ref('昵称')
+        let user = localStorage.getItem('user')
+        if (user) {
+            let userObject = JSON.parse(user)
+            name.value = userObject.name
+        }
         const extractColorByName = () => {
             const index = name.value[0].charCodeAt(0) % backgroundColors.length;
             return backgroundColors[index]
         }
 
         const selectMenu = (menuItem) => {
+            if (menuItem.index == 7) {
+                ElMessageBox.confirm(
+                    '确定要退出系统吗？',
+                    '提示',
+                    {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                    }
+                ).then(() => {
+                    localStorage.removeItem('token')
+                    router.push(`/login`)
+                }).catch(() => {
+                })
+                return
+            }
             isActive.value = menuItem.index
             router.push(`/${menuItem.path}`)
         }
@@ -127,6 +159,22 @@ export default defineComponent({
         const toContinueRegister = () => {
             isActive.value = 1
         }
+
+        watch(
+            () => route,
+            (newRoute) => {
+                for (let i = 0; i < menus.length; i++) {
+                    let item = menus[i]
+                    if (newRoute.fullPath.indexOf(item.path) != -1) {
+                        isActive.value = i
+                        break
+                    }
+                }
+            },
+            {
+                deep: true
+            }
+        )
 
         return {
              name, extractColorByName, menus, isActive, selectMenu, toContinueRegister
@@ -142,9 +190,13 @@ body {
     background-color: rgba(236, 245, 255, 1) ;
 }
 
+.home-body-left-menu {
+
+}
+
 .home-body-left-menu-item-isActive {
     background-color:  rgba(217, 236, 255, 1);
-    color:  rgba(64, 158, 255, 1);;
+    color:  rgba(64, 158, 255, 1);
     box-shadow: inset -2px 0 0 0 rgba(64, 158, 255, 1);
 }
 
@@ -163,6 +215,7 @@ body {
     font-size: 16px;
     font-weight: 400;
     cursor: pointer;
+    color: rgba(96, 98, 102, 1);
 }
 
 .el-menu-vertical-demo .el-menu-item {
@@ -199,21 +252,45 @@ body {
     margin-top: 24px;
     background-color: #ffffff;
     display: flex;
+    margin-bottom: 24px;
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
 
 .home-body-left {
     width: 200px;
-    height: 672px;
     opacity: 1;
     display: flex;
-    align-items: center;
 }
 
 .home-body-left-container {
     width: 200px;
-    height: 638px;
     opacity: 1;
     border-right: 1px solid #E0E0E0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.home-gradient-dashed-line {
+    width: 176px;
+    height: 1px;
+    position: relative;
+}
+
+.home-gradient-dashed-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: inherit;
+    border-bottom: 1px dashed rgba(144, 147, 153, 1);
+    -webkit-mask: linear-gradient(90deg, rgba(144, 147, 153, 0) 0%, rgba(144, 147, 153, 0.52) 50.5%, rgba(144, 147, 153, 0) 100%);
+    mask: linear-gradient(90deg, rgba(144, 147, 153, 0) 0%, rgba(144, 147, 153, 0.52) 50.5%, rgba(144, 147, 153, 0) 100%);
+    pointer-events: none;
 }
 
 </style>

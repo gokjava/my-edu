@@ -34,7 +34,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     if (response.status == 401) {
-        router.push('/')
+        router.push('/login')
     }
     // 对响应数据做些什么
     let code = response.data.code
@@ -50,13 +50,13 @@ instance.interceptors.response.use(
   error => {
     // 对响应错误做些什么
     if (error.response.status  == 401) {
-      router.push('/')
+      ElMessage({
+        message: `请重新登陆`,
+        type: 'error',
+      });
+      router.push('/login')
     }
-    ElMessage({
-      message: `请重新登陆`,
-      type: 'error',
-    });
-      return Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 

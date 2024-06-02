@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, getCurrentInstance  } from 'vue'
+import { defineComponent, ref, getCurrentInstance, onMounted  } from 'vue'
 import axios from '@/axios'
 import { ElMessageBox } from 'element-plus'
 import { doubleMd5Reversed } from '@/components/common/common-encry'
@@ -78,6 +78,9 @@ export default defineComponent({
 
     name: "loginPage",
     setup() {
+        onMounted(() => {
+            document.body.style.backgroundColor = 'rgba(236, 245, 255, 1)';
+        })
         const username = ref(null)
         const password = ref(null)
         const showPassword = ref(false)
@@ -101,15 +104,16 @@ export default defineComponent({
                 console.log(r.data)
                 // 存储localStorage
                 localStorage.setItem('token', r.data.data.token)
+                localStorage.setItem('user', JSON.stringify(r.data.data.user))
                 if (!r.data.data.user.isInitPassword) {
                     ElMessageBox.alert('请您修改密码，否则会存在安全问题；请到 我的信息-其它信息-修改密码 处修改', '提示', {
                         confirmButtonText: 'OK',
                         callback: () => {
-                            proxy.$router.push('/home/workbench')
+                            proxy.$router.push('/main/workbench')
                         }
                     })
                 } else {
-                    proxy.$router.push('/home/workbench')
+                    proxy.$router.push('/main/workbench')
                 }
             }
         }
@@ -124,7 +128,7 @@ export default defineComponent({
 
 <style scoped>
 
-body {
+:deep(body) {
     background-color: rgba(236, 245, 255, 1);
 }
 
@@ -208,6 +212,12 @@ body {
 
 }
 
+.item-img {
+    width: 349.63px;
+    height: 273px;
+    opacity: 1;
+}
+
 .left-container {
     width: 400px;
     height: 460px;
@@ -218,59 +228,52 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    .item-img {
-        width: 349.63px;
-        height: 273px;
-        opacity: 1;
-    }
+.item1 {
+    left: 324.5px;
+    top: 33.68px;
+    width: 45px;
+    height: 45px;
+    opacity: 0.12;
+    transform: rotate(45deg);
+    background: rgba(255, 255, 255, 1);
+    position: absolute;
+}
 
-    .item1 {
-        left: 324.5px;
-        top: 33.68px;
-        width: 45px;
-        height: 45px;
-        opacity: 0.12;
-        transform: rotate(45deg);
-        background: rgba(255, 255, 255, 1);
-        position: absolute;
-    }
+.item2 {
+    left: 302.67px;
+    top: 387.27px;
+    width: 25px;
+    height: 60px;
+    opacity: 0.07;
+    transform: rotate(-30deg);
+    background: rgba(255, 255, 255, 1);
+    position: absolute;
+}
 
-    .item2 {
-        left: 302.67px;
-        top: 387.27px;
-        width: 25px;
-        height: 60px;
-        opacity: 0.07;
-        transform: rotate(-30deg);
-        background: rgba(255, 255, 255, 1);
-        position: absolute;
-    }
+.item3 {
+    left: -147px;
+    top: 304px;
+    width: 300px;
+    height: 300px;
+    opacity: 0.07;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 1);
+    position: absolute;
+}
 
-    .item3 {
-        left: -147px;
-        top: 304px;
-        width: 300px;
-        height: 300px;
-        opacity: 0.07;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 1);
-        position: absolute;
-    }
-
-    .item4 {
-        left: 309.74px;
-        top: 3px;
-        width: 42.26px;
-        height: 133.44px;
-        opacity: 0.09;
-        position: absolute;
-        border-left: 115px solid transparent;
-        border-right: 96px solid transparent;
-        border-bottom: 100px solid rgba(255, 255, 255, 1);
-        transform: rotate(-21deg);
-    }
-
+.item4 {
+    left: 309.74px;
+    top: 3px;
+    width: 42.26px;
+    height: 133.44px;
+    opacity: 0.09;
+    position: absolute;
+    border-left: 115px solid transparent;
+    border-right: 96px solid transparent;
+    border-bottom: 100px solid rgba(255, 255, 255, 1);
+    transform: rotate(-21deg);
 }
 
 </style>

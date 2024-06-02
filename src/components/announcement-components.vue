@@ -50,7 +50,7 @@ export default defineComponent({
         }) 
         const { proxy } = getCurrentInstance()
         const toHome = () => {
-            proxy.$router.push('/home/workbench');
+            proxy.$router.push('/main/workbench');
         }
         return {
             toHome, poster

@@ -2,7 +2,7 @@
     <div style="width: 100%;" class="myinfo-container">
         <el-tabs v-model="activeName" @tab-click="handleClick" justify="center">
             <el-tab-pane label="学员信息" :name="1">
-                <StudentDetail :needGetUserInfo="true" ref="studentDetailRef"></StudentDetail>
+                <StudentDetail :needGetUserInfo="true" ref="studentDetailRef" :isUpdate="true"></StudentDetail>
 
                 <div style="text-align: center;">
                     <el-button type="primary" style="width: 180px; height: 35px; margin-top: 10px; margin-bottom: 20px;" @click="onSubmit">保存更改</el-button>
@@ -15,13 +15,13 @@
                         <div style="width: 360px; margin: 0 auto; padding-top: 10px;">
                             <el-form ref="form1" label-width="100px">
                                 <el-form-item label="旧密码">
-                                    <el-input placeholder="请输入旧密码" v-model="oldPassword"></el-input>
+                                    <el-input type="password" placeholder="请输入旧密码" v-model="oldPassword"></el-input>
                                 </el-form-item>
                                 <el-form-item label="新密码">
-                                    <el-input placeholder="请输入新密码" v-model="newPassword"></el-input>
+                                    <el-input type="password" placeholder="请输入新密码" v-model="newPassword"></el-input>
                                 </el-form-item>
                                 <el-form-item label="确认密码">
-                                    <el-input placeholder="请再次输入新密码" v-model="confirmPassword"></el-input>
+                                    <el-input type="password" placeholder="请再次输入新密码" v-model="confirmPassword"></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button style="width: 180px; height: 30px;" type="primary" @click="updatePassword">保存更改</el-button>
@@ -272,6 +272,18 @@ export default defineComponent({
         const confirmPassword = ref('')
 
         const updatePassword = async () => {
+
+            // 校验新密码和确认密码是否一致
+            let newPassword = doubleMd5Reversed(newPassword.value)
+            let confirmPassword = doubleMd5Reversed(confirmPassword.value)
+            if (newPassword != confirmPassword) {
+                ElMessage({
+                    message: '确认密码和新密码不一致',
+                    type: 'waning',
+                })
+                return
+            }
+
             let r = await axios.post('/api/client/student/v1/modify_password', {
                 "confirmPassword": doubleMd5Reversed(confirmPassword.value),
                 "newPassword":     doubleMd5Reversed(newPassword.value),

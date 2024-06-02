@@ -85,7 +85,7 @@
             </div>
 
             <div style="margin-top: 21px; text-align: center;">
-                <el-button style="width: 100px ;height: 30px;" type="primary" @click="printEducation(n)">打印</el-button>
+                <el-button style="width: 100px ;height: 30px;" type="primary" @click="printEducation(n)" :disabled="true">打印</el-button>
                 <el-button style="width: 100px ;height: 30px; margin-left: 12px;" @click="download(n)">下载</el-button>
             </div>
         </div>

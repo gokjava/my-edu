@@ -142,11 +142,11 @@ export default defineComponent({
                 select: false
             },{
                 title: '开票流程',
-                desc: '',
+                desc: '暂无数据',
                 select: false
             },{
                 title: '课程观看须知',
-                desc: '',
+                desc: '暂无数据',
                 select: false
             }
         ])
