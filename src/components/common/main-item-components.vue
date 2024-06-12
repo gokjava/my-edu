@@ -11,6 +11,8 @@
             {{ getDateStr(item.postTime) }}
         </div>
     </div>
+
+    <el-empty v-if="!props.jxjy || props.jxjy.length <= 0" :image-size="110" />
 </template>
 
 <script setup>
@@ -31,6 +33,10 @@ const getDateStr = (dateString) => {
 const router = useRouter()
 
 const toQueryDetail = (item) => {
+    if (item.redirectUrl) {
+        window.open(item.redirectUrl)
+        return
+    }
     router.push('/home/item?id=' + item.id)
 }
 

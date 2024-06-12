@@ -14,7 +14,7 @@ const MainListPage = () => import('@/components/main/main-list')
 
 const ConRegisterPage = () => import('@/components/item/continuetoregister-components')
 const WorkbenchPage = () => import('@/components/item/workbench-components')
-const MycoursePage = () => import('@/components/item/mycourse-components')
+const MycoursePage = () => import('@/components/item/newmycourse-components')
 const ReductionPage = () => import('@/components/item/reduction-components')
 const EductionPage = () => import('@/components/item/education-components')
 const OrderPage = () => import('@/components/item/order-components')
@@ -43,7 +43,20 @@ const routes = [
                 component: WorkbenchPage
             },{
                 path: 'mycourse',
-                component: MycoursePage
+                component: MycoursePage,
+                redirect: '/main/mycourse/first',
+                children: [
+                    {
+                        path: 'first',
+                        component: () => import('@/components/course/course-list-components')
+                    },{
+                      path: 'detail',
+                      component: () => import('@/components/course/course-detail-components')
+                    },{
+                      path: 'study',
+                      component: () => import('@/components/course/course-study-components')
+                    },
+                ]
             },{
                 path: 'hour',
                 component: ReductionPage

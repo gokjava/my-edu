@@ -47,12 +47,12 @@
                         </div>
                     </el-carousel-item>
                 </el-carousel>
+                <el-empty v-else :image-size="150" />
             </div>
 
             <div style="width: 432px; height: 288px; border-radius: 4px;background: linear-gradient(180deg, rgba(217, 236, 255, 1) 0%, rgba(217, 236, 255, 0) 100%); display: flex;  flex-direction: column; align-items: center;">
-                <div style="width: 384px;margin-top: 16px; display: flex;">
-
-                    <div v-if="tzgg && tzgg.length > 0" style="font-size: 18px;font-weight: 600;letter-spacing: 0px;line-height: 32px;color: rgba(48, 49, 51, 1); overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;"> 
+                <div style="width: 384px;margin-top: 16px; display: flex;"  v-if="tzgg && tzgg.length > 0">
+                    <div style="font-size: 18px;font-weight: 600;letter-spacing: 0px;line-height: 32px;color: rgba(48, 49, 51, 1); overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;"> 
                         <el-tag
                             type="danger"
                             effect="dark"
@@ -63,7 +63,6 @@
                         <span @click="toDetail(tzgg[0])" style="cursor: pointer; padding-left: 5px;">
                             {{ tzgg[0].title }}
                         </span>
-                        
                     </div>
                 </div>
                 <div class="main-item1"  v-if="tzgg && tzgg.length > 1">
@@ -77,6 +76,8 @@
                         </div>
                     </div>
                 </div>
+
+                <el-empty v-if="!tzgg || tzgg.length <= 0" :image-size="150" />
             </div>
         </div>
         <div :style="{marginTop: '28px', backgroundImage: `url(${main1})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 36px;color: rgba(255, 255, 255, 1); cursor: pointer; " @click="toHome">
@@ -117,7 +118,7 @@
                     <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'rgba(23, 137, 255, 1)',  fontWeight:'600' }">
                         信息资讯
                     </div>
-                    <div  class="main-firstpage-more" @click="showMore(4, '信息资讯')">
+                    <div  class="main-firstpage-more" @click="showMore(28, '信息资讯')">
                         更多>>
                     </div>
                 </div>
@@ -162,14 +163,15 @@
                         </div>
                     </div>
 
-                    <div style="width: 408px; height: 212px; margin-top: 24px;">
-                        <el-carousel  height="auto" autoplay v-if="kpsp && kpsp.length > 0">
+                    <div style="width: 408px; height: 212px; margin-top: 24px;" v-if="kpsp && kpsp.length > 0">
+                        <el-carousel  height="auto" autoplay >
                             <el-carousel-item  style=" width:408px; height: 212px; " v-for="(item, index) in kpsp" :key="index">
                                 <img :src="item.thumb" style="width: 408px; height: 212px;cursor: pointer;" @click="toDetail(item)"/>
                             </el-carousel-item>
                         </el-carousel>
+                       
                     </div>
-                    
+                    <el-empty v-else :image-size="110" />
                 </div>
             </div>
         </div>
@@ -206,15 +208,16 @@
                         </div>
                     </div>
 
-                    <div style="width: 408px; height: 212px; margin-top: 24px;">
+                    <div style="width: 408px; height: 212px; margin-top: 24px;" v-if="fpsp && fpsp.length > 0">
                         <!-- <img src="https://img.js.design/assets/smartFill/img431164da758808.jpg"  style="width: 408px; height: 212px; margin-top: 24px;"/> -->
-                        <el-carousel  height="auto" autoplay v-if="fpsp && fpsp.length > 0">
+                        <el-carousel  height="auto" autoplay >
                             <el-carousel-item  style=" width:408px; height: 212px; " v-for="(item, index) in fpsp" :key="index">
                                 <img :src="item.thumb" style="width: 408px; height: 212px;cursor: pointer;" @click="toDetail(item)"/>
                             </el-carousel-item>
                         </el-carousel>
+                        
                     </div>
-                    
+                    <el-empty v-else :image-size="110" />
                 </div>
             </div>
         </div>
@@ -277,11 +280,10 @@ const showMore=(id, tag) => {
 const clickMainIndex = ref(1)
 const switchIndex = (index) => {
     clickMainIndex.value = index
-    axios.get(`/api/client/first_page/v1/posters_list?cid=${index == 1 ? 3 : 5}&pageSize=6`).then(r => {
+    axios.get(`/api/client/first_page/v1/posters_list?cid=${index == 1 ? 27 : 28}&pageSize=6`).then(r => {
         jxjy.splice(0, jxjy.length)
         jxjy.push(...r.data.data.records)
     })
-
 }
 
 let swiperList = reactive([])
@@ -301,16 +303,16 @@ axios.get(`/api/client/first_page/v1/posters_list?cid=3&pageSize=6`).then(r => {
 
 
 const xxzx = reactive([])
-axios.get(`/api/client/first_page/v1/posters_list?cid=4&pageSize=6`).then(r => {
+axios.get(`/api/client/first_page/v1/posters_list?cid=28&pageSize=6`).then(r => {
     xxzx.push(...r.data.data.records)
 })
 
 const kpzs = reactive([])
-axios.get(`/api/client/first_page/v1/posters_list?cid=7&pageSize=6`).then(r => {
+axios.get(`/api/client/first_page/v1/posters_list?cid=31&pageSize=6`).then(r => {
     kpzs.push(...r.data.data.records)
 })
 const flfg = reactive([])
-axios.get(`/api/client/first_page/v1/posters_list?cid=11&pageSize=6`).then(r => {
+axios.get(`/api/client/first_page/v1/posters_list?cid=35&pageSize=6`).then(r => {
     flfg.push(...r.data.data.records)
 })
 
@@ -320,12 +322,12 @@ axios.get(`/api/client/first_page/v1/posters_list?cid=1&pageSize=6`).then(r => {
 })
 
 const kpsp = reactive([])
-axios.get(`/api/client/first_page/v1/posters_list?cid=8&pageSize=6`).then(r => {
+axios.get(`/api/client/first_page/v1/posters_list?cid=32&pageSize=6`).then(r => {
     kpsp.push(...r.data.data.records)
 })
 
 const fpsp = reactive([])
-axios.get(`/api/client/first_page/v1/posters_list?cid=12&pageSize=6`).then(r => {
+axios.get(`/api/client/first_page/v1/posters_list?cid=36&pageSize=6`).then(r => {
     fpsp.push(...r.data.data.records)
 })
 

@@ -15,15 +15,9 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 24px;">
-        <div >
+        <div v-if="mainList && mainList.length > 0">
             <div v-for="(item, n) in mainList " :key="n" :style="{ marginTop: n == 0 ? '0px' : '24px' }">
                 <div style="width: 887px; display: flex; justify-content: space-between;">
-                    <!-- <div style="width: 200px; height: 120px;" v-if="item.thumb">
-                        <img :src="item.thumb" style="width: 200px; height: 120px;" />
-                    </div>
-                    <div style="width: 200px; height: 120px;" class="bg-color-primary-brand-9" v-else>
-                    
-                    </div> -->
                     <div style="cursor: pointer;" @click="showDetails(item)">
                         <ImgTextCommonPage :width="200" :height="120" :text="'暂无图片'" :img="item.thumb"></ImgTextCommonPage>
                     </div>
@@ -41,9 +35,15 @@
                 
             </div>
 
+            
+
             <div style="display: flex; justify-content: center; margin-top: 24px" v-if="total && total > 0">
                 <el-pagination layout="prev, pager, next" :total="total"  v-model:current-page="curPage" :default-page-size="6" @change="pageChange" />
             </div>
+        </div>
+
+        <div v-else style="width: 100%;">
+            <el-empty  :image-size="150" />
         </div>
         
         <div style="width: 288px;">

@@ -1,10 +1,10 @@
 <template>
     <div class="main-com-class">
         <div>   
-            <div style="width: 100%; height: 144px; background: rgba(236, 245, 255, 1); display: flex; justify-content: center;"  >
+            <div class="main-com-class-container"  >
                 <!-- <div  style="url(https://img.js.design/assets/img/665352ced606f208c9b98530.png#9d2ac928629cbe21f5c7406052f9328c);"> -->
                 <div  class="main-com-class-title" >
-                    <div style="font-size: 32px;font-weight: 600;letter-spacing: 0px;line-height: 48px;color: rgba(51, 126, 204, 1); width: 100%;">黑龙江省执业药师继续教育服务平台</div>
+                    <div style="font-size: 32px;font-weight: 600;letter-spacing: 0px;line-height: 48px;color: rgba(51, 126, 204, 1); width: 100%;">黑龙江省医药流通行业协会执业药师继续教育</div>
                 </div>
             </div>
             <div style="width: 100%; height: 100px; background: rgba(23, 137, 255, 1); display: flex; justify-content: center;">
@@ -32,7 +32,7 @@
                 <div style="font-size: 16px;font-weight: 600;letter-spacing: 0px;line-height: 40px;color: rgba(255, 255, 255, 1);">
                     友情连接
                 </div>
-                <div v-for="(item, n) in friendLink" :key="n" style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 40px;color: rgba(255, 255, 255, 1); margin-left: 32px;">
+                <div v-for="(item, n) in friendLink" :key="n" style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 40px;color: rgba(255, 255, 255, 1); margin-left: 32px; cursor: pointer;" @click="openNewWindow(item.redirectUrl)">
                     {{ item.title}}
                 </div>
             </div>
@@ -57,7 +57,7 @@
                             技术支持：北京百兴园创信息科技有限公司
                         </div>
                         <div>
-                            Copyright © 2024 版权所有 黑ICP备2021001053号-1
+                            Copyright © 2024 版权所有 黑ICP备2021001053号-2
                         </div>
                     </div>
                 </div>
@@ -119,21 +119,21 @@ const menus = [
         name: '继续教育',
         icon: Classroom,
         path: '/home/conEdu',
-        cid: 3,
+        cid: 27,
         list: true
     },
     {
         name: '信息资讯',
         icon: AllApplication,
         path: '/home/info',
-        cid: 4,
+        cid: 28,
         list: true
     },
     {
         name: '政策法规', 
         icon: Agreement,
         path: '/home/zcfg',
-        cid: 5,
+        cid: 29,
         list: true
     },
     {
@@ -156,6 +156,9 @@ export default defineComponent({
         firstPage,  Home, RoadSignBoth, Classroom, AllApplication, Agreement, Find ,PhoneVideoCall
     },
     setup() {
+        const openNewWindow = (url) => {
+            window.open(url)
+        }
         const menuIndex = ref(0)
         const selectType = ref(0)
         const router = useRouter()
@@ -207,7 +210,7 @@ export default defineComponent({
         })
 
         return {
-            menuIndex, menus, switchMenu, friendLink, selectType, MainTitle
+            menuIndex, menus, switchMenu, friendLink, selectType, MainTitle, openNewWindow
         }
     }
 })
@@ -248,8 +251,13 @@ export default defineComponent({
                 1px -1px 0 #fff,  
                 -1px 1px 0 #fff,  
                 1px 1px 0 #fff;
-    background: linear-gradient(90deg, rgba(236, 245, 255, 1) 0%, rgba(236, 245, 255, 0.2) 48.56%, rgba(236, 245, 255, 1) 100%), url(../assets/main/main-title.png);
+    /* background: linear-gradient(90deg, rgba(236, 245, 255, 1) 0%, rgba(236, 245, 255, 0.2) 48.56%, rgba(236, 245, 255, 1) 100%); */
     background-size: cover;
+}
+
+.main-com-class-container {
+    width: 100%; height: 144px; background: rgba(236, 245, 255, 1); display: flex; justify-content: center; 
+    background-image: url(../assets/home-title-new.png)
 }
 
 </style>

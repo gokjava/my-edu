@@ -40,36 +40,7 @@ export default defineComponent({
         }
 
         const testData = reactive([
-            {
-                "id": "01",
-                "year": 2024,
-                "orderNumber": "2024042510251420100005",
-                "buidTime": "2024-04-25 10:25:14",
-                "amount": "180",
-                "payType": "微信扫码",
-                "payTime": "2024-04-25 10:25:16",
-                "status": 1
-            },
-            {
-                "id": "02",
-                "year": 2024,
-                "orderNumber": "2024042510251420100005",
-                "buidTime": "2024-04-25 10:25:14",
-                "amount": "180",
-                "payType": "微信扫码",
-                "payTime": "2024-04-25 10:25:16",
-                "status": 2
-            },
-            {
-                "id": "03",
-                "year": 2024,
-                "orderNumber": "2024042510251420100005",
-                "buidTime": "2024-04-25 10:25:14",
-                "amount": "180",
-                "payType": "微信扫码",
-                "payTime": "2024-04-25 10:25:16",
-                "status": 2
-            }
+            
         ]);
         const getList = async () => {
             let r = await axios.get(`/api/client/order/v1/my_order?status=${activeName.value}`)

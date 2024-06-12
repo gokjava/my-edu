@@ -431,9 +431,9 @@ export default defineComponent({
         axios.get('/api/client/course/v1/my_course').then(r => {
             // console.log(r.data)
             if (!r.data.data || r.data.data.length == 0) {
-                random.value = 1
+                //random.value = 1
             } else {
-                random.value = 2
+                // random.value = 2
             }
             courseList.push(...r.data.data)
             console.log(courseList)
@@ -441,7 +441,7 @@ export default defineComponent({
 
         const  { proxy } = getCurrentInstance()
 
-        const random = ref(1)
+        const random = ref(0)
         const continueRegister = () => {
             // emit('to-continue-register', true)
             router.push('/main/con')

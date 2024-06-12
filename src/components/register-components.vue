@@ -61,7 +61,7 @@
                         请修改后保存，以免影响继续教育。若有疑问可咨询：<span style="color: rgba(255, 87, 51, 1);">0451-82738127</span>
                     </div>
                     <div v-if="!registerSuccess">
-                        你的注册信息已存在，请勿重复提交。如有疑问，可致电 <span style="color: rgba(255, 87, 51, 1);">010-65279180</span>
+                        {{ errorMessaage }}。如有疑问，可致电 <span style="color: rgba(255, 87, 51, 1);">010-65279180</span>
                     </div>
                 </div>
 
@@ -90,14 +90,20 @@
       const registerSuccess = ref(true)
 
       const dialogVisible = ref(false)
-      
+      const errorMessaage = ref('')
       const studentDetailRef = ref(null)
       const onSubmit = async () => {
         let result = studentDetailRef.value.canSubmit()
         if (result != null) {
           let r = await http.post('/api/client/student/v1/register', result)
           registerSuccess.value = r.data.code == 1
-          dialogVisible.value = true
+          if (registerSuccess.value) {
+            dialogVisible.value = true
+          }
+          // if (!registerSuccess.value) {
+          //   errorMessaage.value = r.data.msg
+          // }
+          
         }
       }
 
@@ -114,7 +120,8 @@
         dialogVisible,
         registerSuccess,
         onSubmit,
-        studentDetailRef
+        studentDetailRef,
+        errorMessaage
       }
     }
   })

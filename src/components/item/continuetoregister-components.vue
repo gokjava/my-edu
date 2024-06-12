@@ -20,7 +20,7 @@
 
             <div v-if="aciveIndex == 1">
                 <div  style="margin-top: 78px; display: flex; justify-content: center;">
-                    <div @click="selectYearId = item.id" class="continue-radio" v-for="(item, index) in yearData" :key="item.id" :style="{ marginLeft: index > 0 ? '37px' : '0px',  border : selectYearId == item.id ? '1px solid rgba(64, 158, 255, 1)' : '1px solid rgba(220, 223, 230, 1)'} " >
+                    <div @click="selectYearId = item.id;" class="continue-radio" v-for="(item, index) in yearData" :key="item.id" :style="{ marginLeft: index > 0 ? '37px' : '0px',  border : selectYearId == item.id ? '1px solid rgba(64, 158, 255, 1)' : '1px solid rgba(220, 223, 230, 1)'} " >
                         <div class="continue-radio-quan" :class="{ 'bg-color-primary-brand-10' : selectYearId == item.id }" :style="{border : selectYearId == item.id ? '1px solid rgba(64, 158, 255, 1)' : '1px solid rgba(220, 223, 230, 1)'}">
 
                         </div>
@@ -116,7 +116,7 @@
 
             <el-dialog
                 v-model="videoDialogVisible"
-                title="视频试看"
+                title="课程试看"
                 width="600"
                 destroy-on-close
                 center
@@ -147,6 +147,7 @@ import imageSrc from '@/assets/continue-course.png';
 import axios from '@/axios'
 import QRCodeVue from 'qrcode.vue';
 import { getServerUrl } from '@/components/common/constant'
+import { ElMessageBox } from 'element-plus';
 const serverUrl = getServerUrl()
 
 export default defineComponent({
@@ -182,6 +183,7 @@ export default defineComponent({
 
         const selectYearId = ref(0)
         const aciveIndex = ref(1)
+        const selectYear = ref(null)
 
         const courseList = reactive([])
 
@@ -203,13 +205,14 @@ export default defineComponent({
             tipMessage.value = ''
         }
         const lastTime = ref()
-        const maxTimeAllowed = 5; // 3 minutes in seconds
+        const maxTimeAllowed = 60; // 3 minutes in seconds
         const onTimeUpdate = (event) => {
             const video = event.target.getElementsByTagName('video')[0];
             const currentTime = video.currentTime;
             if (currentTime > maxTimeAllowed) {
                 video.pause();
                 tipMessage.value = '观看已结束'
+                // ElMessage.warning(`试看已结束`)
             } else {
                 lastTime.value = currentTime;
             }
@@ -229,6 +232,31 @@ export default defineComponent({
         const qrcodeCanvas = ref()
 
         const toBuildOrder = async () => {
+
+            // 校验学时问题：
+            let selectYear = yearData.find(item => item.id == selectYearId.value)
+            let a = 0
+            let b = 0
+            let courseScopes = 0
+            courseList.forEach(item => {
+                if (item.type == 1) {
+                    a+=item.courseHour
+                } else {
+                    b+=item.courseHour
+                }
+                courseScopes += item.courseHour
+            })
+            let yearScopes = selectYear.classMajorHours + selectYear.classMinorHours
+            if (courseScopes < yearScopes) {
+                ElMessageBox.alert(`${selectYear.year}年度要求完成${yearScopes}学时，专业课${selectYear.classMajorHours}学时，公需课${selectYear.classMinorHours}学时，本次所选的课程含${courseScopes}学时，专业课${a}学时，公需课${b}学时，请返回选择足够学时的课程`, '学时未达标', {
+                    confirmButtonText: '确定',
+                    callback: () => {
+                        
+                    },
+                })
+                return;
+            }
+
             aciveIndex.value = 3
             let r = await axios.post('/api/client/order/v1/create_order', {
                 paymentFrom: 1,
@@ -275,7 +303,7 @@ export default defineComponent({
         return {
             random, continueRegister, yearData, selectYearId, aciveIndex, courseList, imageSrc,selectYearById, serverUrl,
             selectVideo, videoDialogVisible, skVideo, onSeeking, onTimeUpdate, skPoster, toBuildOrder, orderDetail, qrcodeCanvas,
-            tipMessage, toStudyPage
+            tipMessage, toStudyPage, selectYear
         }
     }
     

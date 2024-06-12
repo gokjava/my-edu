@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 24px;">
-            <div style="display: flex; flex-direction: column; align-items: center;width: 887px">
+            <div style="display: flex; flex-direction: column; align-items: center;width: 887px" v-if="!isEmpty">
                 <div style="font-size: 20px;font-weight: 600;letter-spacing: 0px;line-height: 28px;color: rgba(0, 0, 0, 1);">
                     {{ poster.title }}
                 </div>
@@ -21,6 +21,9 @@
                 <div class="main-detail-content" style="margin-top: 49px; width: 100%;white-space: pre-wrap;font-size: 16px;font-weight: 400;letter-spacing: 0px;line-height: 30px;color: rgba(48, 49, 51, 1);" v-html="poster.content">
 
                 </div>
+            </div>
+            <div v-else style="width: 887px">
+                <el-empty  :image-size="150" />
             </div>
             <div style="width: 288px;">
                 <MainRight></MainRight>
@@ -53,6 +56,7 @@ watch(
 )
 
 const poster = ref({})
+const isEmpty = ref(false)
 const showDetails = () => {
     if (type == 2) {
         // 获取list接口
@@ -63,6 +67,8 @@ const showDetails = () => {
                         poster.value = r.data.data
                     }
                 }) 
+            } else {
+                isEmpty.value = true
             }
         })
         // 获取详情接口

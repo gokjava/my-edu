@@ -146,7 +146,8 @@ export default defineComponent({
                         confirmButtonText: '确定',
                         showClose: false,
                         callback: () => {
-                            proxy.$router.push('/main/mycourse')
+                            // proxy.$router.push('/main/mycourse')
+                            proxy.$router.go(-1)
                         },
                     });
                 }

@@ -20,7 +20,7 @@
                 </div>
 
                 <div style="width: 98%">
-                    <div v-for="item in content" class="workbench-item2-left-gg" :key="item.id">
+                    <div v-for="item in content" class="workbench-item2-left-gg" :key="item.id" style="padding-bottom: 24px;">
                         <div class="workbench-item2-left-gg-left" @click="toAnnou(item.id)">
                             {{ item.title }}
                         </div>
@@ -28,9 +28,10 @@
                             {{ item.postTime && item.postTime.replace('T', ' ') }}
                         </div>
                     </div>
+                    <el-empty v-if="!content || content.length <= 0" :image-size="80" />
                 </div>
 
-                <div class="workbench-item2-left-title-c" style="margin-top: 24px;">
+                <div class="workbench-item2-left-title-c" >
                     <div class="workbench-item2-left-title-b">
                         使用指南
                     </div>
@@ -152,7 +153,7 @@ export default defineComponent({
         ])
         const { proxy } = getCurrentInstance();
         const toAnnou = (id) => {
-            proxy.$router.push(`/announcement?id=${id}`);
+            proxy.$router.push(`/home/item?id=${id}`);
         }
         return {
             item1Data, useData, toAnnou, titles, content

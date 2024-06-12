@@ -11,7 +11,7 @@
         <div class="right-container">
             <div class="form">
                 <div class="form-title">
-                    黑龙江省执业药师继续教育服务平台
+                    黑龙江省医药流通行业协会执业药师继续教育
                 </div>
                 <div class="form-input">
                     <el-input style="height: 36px;" v-model="username" placeholder="请输入身份证号">
@@ -23,7 +23,7 @@
                     </el-input>
                 </div>
                 <div class="form-input">
-                    <el-input v-model="password" :type="showPassword ? 'input' :'password'" style="height: 36px;" placeholder="请输入密码">
+                    <el-input v-model="password" :type="showPassword ? 'input' :'password'" style="height: 36px;" placeholder="请输入密码" @keyup.enter="handleEnter">
                         <template #prefix>
                             <el-icon>
                                 <lock />
@@ -118,8 +118,12 @@ export default defineComponent({
             }
         }
 
+        const handleEnter = () => {
+            login()
+        }
+
         return {
-            username, password, showPassword, updateInputType, toReigster, login
+            username, password, showPassword, updateInputType, toReigster, login, handleEnter
         }
     }
     
