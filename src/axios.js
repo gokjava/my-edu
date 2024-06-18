@@ -6,7 +6,7 @@ import router from '@/router/index'
 // 创建 Axios 实例
 const instance = axios.create({
   baseURL: getServerUrl(), // 替换为你的 API 基础 URL
-  timeout: 10000, // 请求超时时间
+  timeout: 30000, // 请求超时时间
 });
 
 // 请求拦截器
@@ -34,6 +34,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     if (response.status == 401) {
+        localStorage.removeItem('token')
         router.push('/login')
     }
     // 对响应数据做些什么
@@ -50,6 +51,7 @@ instance.interceptors.response.use(
   error => {
     // 对响应错误做些什么
     if (error.response.status  == 401) {
+      localStorage.removeItem('token')
       ElMessage({
         message: `请重新登陆`,
         type: 'error',

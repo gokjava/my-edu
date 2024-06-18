@@ -16,7 +16,7 @@
                             <div>
                                 <div v-for="item in menus" :key="item.index" class="home-body-left-menu-item" :class="{ 'home-body-left-menu-item-isActive': isActive == item.index }" :style="{ color: isActive == item.index ? 'rgba(64, 158, 255, 1)' : 'rgba(96, 98, 102, 1)' }" @click="selectMenu(item)">
                                     <!-- <MoreApp :size="20" theme="filled" style="padding-top: 5px; padding-left: 50px;"/>  -->
-                                    <component :is="item.icon" :size="20" :strokeWidth="1" style="padding-top: 5px; padding-left: 50px;"/>&nbsp;&nbsp;&nbsp;{{ item.name }}
+                                    <component :is="item.icon" :size="20" :strokeWidth="3" style="padding-top: 5px; padding-left: 50px;"/>&nbsp;&nbsp;&nbsp;{{ item.name }}
                                 </div>
                             </div>
                         </div>
@@ -32,8 +32,9 @@
             </div> 
 
             <div class="home-body-right">
-                <div style="margin-top: 24px; font-size: 20px; font-weight: 600; line-height: 28px; padding-bottom: 32px;">
+                <div style="margin-top: 24px; font-size: 20px; font-weight: 600; line-height: 28px; padding-bottom: 32px; display: flex; justify-content: space-between;">
                     {{ menus[isActive].name }}
+                    <el-button v-show="menus[isActive].showApplicationReduction" type="primary" style="width: 88px; height: 32px;" @click="toAdd">申请减免</el-button>
                 </div>
                 <router-view></router-view>
             </div>
@@ -78,7 +79,8 @@ const menus = [
         index: 3,
         icon: Schedule,
         name: '学时减免',
-        path: 'main/hour'
+        path: 'main/hour',
+        showApplicationReduction: true
     },{
         index: 4,
         icon: BachelorCapOne,
@@ -176,8 +178,12 @@ export default defineComponent({
             }
         )
 
+        const toAdd = () => {
+            router.push('/main/hourAdd')
+        }
+
         return {
-             name, extractColorByName, menus, isActive, selectMenu, toContinueRegister
+             name, extractColorByName, menus, isActive, selectMenu, toContinueRegister, toAdd
         }
     }
     

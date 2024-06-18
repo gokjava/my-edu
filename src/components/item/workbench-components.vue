@@ -21,7 +21,7 @@
 
                 <div style="width: 98%">
                     <div v-for="item in content" class="workbench-item2-left-gg" :key="item.id" style="padding-bottom: 24px;">
-                        <div class="workbench-item2-left-gg-left" @click="toAnnou(item.id)">
+                        <div class="workbench-item2-left-gg-left" @click="toAnnou(item)">
                             {{ item.title }}
                         </div>
                         <div class="workbench-item2-left-gg-right">
@@ -59,7 +59,7 @@
             </div>
             <div class="workbench-item2-right">
                 <div class="workbench-item2-right-qrcode">
-                    <img class="workbench-item2-right-qrcode-item" src="https://img.js.design/assets/img/662df7931f0c469d4e99060d.png#993efa9cd662c2c7be753cbb44327216" />
+                    <img class="workbench-item2-right-qrcode-item" src="https://assets.hljszyys.com/static/scan-qrcode.png" />
                     <div style="font-size: 12px; font-weight: 400; color: rgba(144, 147, 153, 1); margin-top: 8px;">
                         扫一扫即可移动端访问
                     </div>
@@ -76,13 +76,13 @@
                         客服电话：
                     </div>
                     <div class="workbench-item2-right2-desc">
-                        010-65279180
+                        0451-82738127
                     </div>
                     <div class="workbench-item2-right2-title">
                         客服微信：
                     </div>
                     <div class="workbench-item2-right2-desc">
-                        18810123476
+                        18745059653
                     </div>
                 </div>
             </div>
@@ -152,8 +152,12 @@ export default defineComponent({
             }
         ])
         const { proxy } = getCurrentInstance();
-        const toAnnou = (id) => {
-            proxy.$router.push(`/home/item?id=${id}`);
+        const toAnnou = (item) => {
+            if (item.redirectUrl) {
+                window.open(item.redirectUrl)
+                return
+            }
+            proxy.$router.push(`/home/item?id=${item.id}`);
         }
         return {
             item1Data, useData, toAnnou, titles, content
@@ -197,7 +201,6 @@ export default defineComponent({
 }
 
 .workbench-item2-right2 {
-    width: 174px;
     height: 208px;
     opacity: 1;
     border-radius: 4px;

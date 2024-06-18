@@ -10,7 +10,7 @@
                         执业药师继续教育
                     </div>
                 </div>
-                <div style="width: 100%; height: 60px; background:  rgba(38, 150, 153, 1); display: flex; align-items: center;">
+                <div style="width: 100%; height: 60px; background:  rgba(38, 150, 153, 1); display: flex; align-items: center; cursor: pointer;" @click="showMore(39, '最美药师')">
                     <div style="height: 32px; width: 32px; display: flex; justify-content: center; align-items: center; padding-left: 14px; padding-right: 14px; cursor: pointer;">
                         <PeoplesTwo theme="outline" size="30" fill="#ffffff" :strokeWidth="2" style="padding-top: 3px"/>
                     </div>
@@ -19,8 +19,8 @@
                     </div>
                 </div>
 
-                <div style="width: 100%; height: 60px; background:  rgba(236, 245, 255, 1); display: flex; align-items: center;">
-                    <div style="height: 32px; width: 32px; display: flex; justify-content: center; align-items: center; padding-left: 14px; padding-right: 14px; cursor: pointer;">
+                <div style="width: 100%; height: 60px; background:  rgba(236, 245, 255, 1); display: flex; align-items: center;cursor: pointer;" @click="openNewWindow('https://zwfw.nmpa.gov.cn/web/user/login#person')">
+                    <div style="height: 32px; width: 32px; display: flex; justify-content: center; align-items: center; padding-left: 14px; padding-right: 14px; ">
                         <img src="@/assets/gh.png" style="height: 32px; height: 32px;"/>
                     </div>
                     <div style="font-size: 16px;font-weight: 400;letter-spacing: 0px;line-height: 24px;color: rgba(64, 158, 255, 1);">
@@ -28,8 +28,8 @@
                     </div>
                 </div>
 
-                <div style="width: 100%; height: 60px; background: rgba(64, 158, 255, 1); display: flex; align-items: center;">
-                    <div style="height: 32px; width: 32px; display: flex; justify-content: center; align-items: center; padding-left: 14px; padding-right: 14px; cursor: pointer;">
+                <div style="width: 100%; height: 60px; background: rgba(64, 158, 255, 1); display: flex; align-items: center;cursor: pointer;" @click="showMore(38, '专家介绍')">
+                    <div style="height: 32px; width: 32px; display: flex; justify-content: center; align-items: center; padding-left: 14px; padding-right: 14px; ">
                         <PeopleBottomCard theme="outline" size="30" fill="#ffffff" :strokeWidth="2" style="padding-top: 3px"/>
                     </div>
                     <div style="font-size: 16px;font-weight: 400;letter-spacing: 0px;line-height: 24px;color: rgba(255, 255, 255, 1);">
@@ -80,26 +80,26 @@
                 <el-empty v-if="!tzgg || tzgg.length <= 0" :image-size="150" />
             </div>
         </div>
-        <div :style="{marginTop: '28px', backgroundImage: `url(${main1})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 36px;color: rgba(255, 255, 255, 1); cursor: pointer; " @click="toHome">
+        <div :style="{marginTop: '24px', backgroundImage: `url(${main1})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 36px;color: rgba(255, 255, 255, 1); cursor: pointer; " @click="toHome">
             执(从)业药师继续教育入口
         </div>
-        <div :style="{marginTop: '28px', backgroundImage: `url(${main2})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; text-shadow: 0px 0px 6px  rgba(0, 0, 0, 0.25);font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 40px;color: rgba(255, 255, 255, 1);">
+        <div :style="{marginTop: '16px', backgroundImage: `url(${main2})`, width: '100%', height: '100px', backgroundSize: 'cover'}"  style="display: flex; justify-content: center; align-items: center; text-shadow: 0px 0px 6px  rgba(0, 0, 0, 0.25);font-size: 24px;font-weight: 600;letter-spacing: 4px;line-height: 40px;color: rgba(255, 255, 255, 1); cursor: pointer;" @click="showMore(39, '最美药师')">
             寻找身边最美药师
         </div>
 
-        <div style="height: 100px; width: 100%; display: flex; justify-content: space-between; margin-top: 28px;">
-            <div style="width: 744px; height: 100px; background-size: cover" :style="{ backgroundImage: `url(${main3})` }">
+        <div style="height: 100px; width: 100%; display: flex; justify-content: space-between; margin-top: 16px;">
+            <div style="width: 744px; height: 100px; background-size: cover; cursor: pointer;" :style="{ backgroundImage: `url(${main3})` }" @click="openNewWindow('https://zwfw.nmpa.gov.cn/web/user/login#person')">
                 
             </div>
-            <div style="width: 433px; height: 100px; background-size: cover" :style="{ backgroundImage: `url(${main4})` }">
+            <div style="width: 433px; height: 100px; background-size: cover; cursor: pointer;" :style="{ backgroundImage: `url(${main4})` }" @click="showMore(38, '专家介绍')">
 
             </div>
         </div>
 
-        <div style="height: 284px; width: 100%; display: flex; justify-content: space-between; margin-top: 28px;">
+        <div style="height: 284px; width: 100%; display: flex; justify-content: space-between; margin-top: 24px;">
             <div style="width: 744px; height: 284px" class="main-item1">
                 <div style="width: 100%; height: 40px; display: flex;justify-content: space-between; background: linear-gradient(90deg, rgba(198, 226, 255, 1) 0%, rgba(198, 226, 255, 0) 100%);  align-items: center;">
-                    <div style="display: flex;">
+                    <div style="display: flex; margin-left: 24px;">
                         <div class="main-abcd" :style="{ boxShadow: clickMainIndex == 1 ? '0 1px 0 0 rgba(64, 158, 255, 1)' : '', color : clickMainIndex == 1 ? 'rgba(23, 137, 255, 1)' : 'black', fontWeight: clickMainIndex == 1 ? '600' : '400'}" @click="switchIndex(1)">
                             继续教育
                         </div>
@@ -111,18 +111,24 @@
                         更多>>
                     </div>
                 </div>
-                <MainItemPage :jxjy="jxjy" :width="670"></MainItemPage>
+                <div style="margin-left: 24px;">
+                    <MainItemPage :jxjy="jxjy" :width="670"></MainItemPage>
+                </div>
+                
             </div>
             <div style="width: 433px; height: 284px" class="main-item1">
                 <div style="width: 100%; height: 40px; display: flex; background: linear-gradient(90deg, rgba(198, 226, 255, 1) 0%, rgba(198, 226, 255, 0) 100%); justify-content: space-between;align-items: center;">
-                    <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'rgba(23, 137, 255, 1)',  fontWeight:'600' }">
+                    <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'rgba(23, 137, 255, 1)',  fontWeight:'600' }" style="margin-left: 24px;">
                         信息资讯
                     </div>
                     <div  class="main-firstpage-more" @click="showMore(28, '信息资讯')">
                         更多>>
                     </div>
                 </div>
-                <MainItemPage :jxjy="xxzx" :width="350"></MainItemPage>
+                <div style="margin-left: 24px;">
+                    <MainItemPage :jxjy="xxzx" :width="350"></MainItemPage>
+                </div>
+                
             </div>
         </div>
 
@@ -139,18 +145,21 @@
                 <div style="background: linear-gradient(to right, rgba(23, 137, 255, 1), rgba(236, 245, 255, 0));height: 2px; width: 520px;"></div>
             </div>
 
-            <div style="width: 1152px; height: 277px; display: flex; justify-content: space-between;">
+            <div style="width: 1152px; height: 277px; display: flex; justify-content: space-between; margin-top: 12px;">
                 <div style="width: 698px; height: 277px; ">
                     <div style="border-bottom: 1px solid rgba(220, 223, 230, 1); width: 100%; display: flex; justify-content: space-between; align-items: center;">
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             科普知识
                         </div>
-                        <div class="main-firstpage-more"  @click="showMore(7, '科普知识')">
+                        <div class="main-firstpage-more"  @click="showMore(31, '科普知识')">
                             更多>>
                         </div>
                     </div>
 
-                    <MainItemPage :jxjy="kpzs" :width="615"></MainItemPage>
+                    <div >
+                        <MainItemPage :jxjy="kpzs" :width="615"></MainItemPage>
+                    </div>
+                    
                     
                 </div>
                 <div style="width: 410px; height: 277px; ">
@@ -158,7 +167,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             科普视频
                         </div>
-                        <div  class="main-firstpage-more" @click="showMore(8, '科普视频')">
+                        <div  class="main-firstpage-more" @click="showMore(32, '科普视频')">
                             更多>>
                         </div>
                     </div>
@@ -185,17 +194,20 @@
                 <div style="background: linear-gradient(to right, rgba(23, 137, 255, 1), rgba(236, 245, 255, 0));height: 2px; width: 520px;"></div>
             </div>
 
-            <div style="width: 1152px; height: 277px; display: flex; justify-content: space-between;">
+            <div style="width: 1152px; height: 277px; display: flex; justify-content: space-between; margin-top: 12px;">
                 <div style="width: 698px; height: 277px; ">
                     <div style="border-bottom: 1px solid rgba(220, 223, 230, 1); width: 100%; display: flex; justify-content: space-between; align-items: center;">
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             法律法规
                         </div>
-                        <div class="main-firstpage-more" @click="showMore(11, '法律法规')">
+                        <div class="main-firstpage-more" @click="showMore(35, '法律法规')">
                             更多>>
                         </div>
                     </div>
-                    <MainItemPage :jxjy="flfg" :width="615"></MainItemPage>
+                    <div >
+                        <MainItemPage :jxjy="flfg" :width="615"></MainItemPage>
+                    </div>
+                    
                     
                 </div>
                 <div style="width: 410px; height: 277px; ">
@@ -203,7 +215,7 @@
                         <div class="main-abcd" :style="{ boxShadow: '0 1px 0 0 rgba(64, 158, 255, 1)', color : 'black',  fontWeight:'600' }">
                             法普视频
                         </div>
-                        <div  class="main-firstpage-more" @click="showMore(12, '法普视频')">
+                        <div  class="main-firstpage-more" @click="showMore(36, '法普视频')">
                             更多>>
                         </div>
                     </div>
@@ -234,7 +246,7 @@ import axios from '@/axios'
 import { TajMahal, PeoplesTwo,PeopleBottomCard  } from '@icon-park/vue-next';
 import main1 from '@/assets/main/main-1.png'
 import main2 from '@/assets/main/main-2.png'
-import main3 from '@/assets/main/main-3.png'
+import main3 from '@/assets/main/main-6.png'
 import main4 from '@/assets/main/main-4.png'
 import main5 from '@/assets/main/main-5.png'
 import { useRouter } from 'vue-router'
@@ -267,13 +279,6 @@ const totalCount = ref(0)
 const showMore=(id, tag) => {
     cid.value = id
     router.push(`/home/list?cid=${id}&tag=${tag}`)
-    // axios.get(`/api/client/first_page/v1/posters_list?cid=${id}&pageSize=6${currentPage ? '&page=' + currentPage : ''}`).then(r => {
-    //     console.log(r.data)
-    //     random.value = 2
-    //     mainList.splice(0, mainList.length)
-    //     mainList.push(...r.data.data.records)
-    //     totalCount.value = r.data.data.total
-    // })
 }
 
 
@@ -376,6 +381,17 @@ const toDetail = (item) => {
 .main-firstpage-more {
     cursor: pointer;
     font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(96, 98, 102, 1);
+}
+
+.el-carousel__indicators--horizontal {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* 防止换行 */
+  overflow: hidden; /* 隐藏超出的部分 */
+}
+
+.el-carousel__button {
+  flex: 0 0 auto; /* 防止缩放 */
 }
 
 </style>

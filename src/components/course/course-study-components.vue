@@ -4,6 +4,7 @@
                 <div class="video-container">
                     <video-player
                         v-if="selectVideoUrl"
+                        :key="componentKey"
                         ref="videoPlayRef"
                         :src="selectVideoUrl"
                         controls
@@ -33,18 +34,34 @@
                             <div style="margin-left: 45px;">
                                 讲师：&nbsp;
                             </div>
-                            <div>
-                                {{ videoData.teacherName }}&nbsp;&nbsp;&nbsp;&nbsp;{{ zhiMapping[videoData.teacherProfession - 1]  }}
-                            </div>
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                :content="videoData.teacherName + '&nbsp;&nbsp;&nbsp;&nbsp;' + zhiMapping[videoData.teacherProfession - 1]  "
+                                placement="top-start"
+                            >
+                                <div style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis ; width: 100px; ">
+                                    {{ videoData.teacherName }}&nbsp;&nbsp;&nbsp;&nbsp;{{ zhiMapping[videoData.teacherProfession - 1]  }}
+                                </div>
+                            </el-tooltip>
+                            
                         </div>
 
                         <div style="margin-top: 10px; display: flex; font-size: 14px; line-height: 22px; font-weight: 400; color: rgba(144, 147, 153, 1);">
                             <div style="margin-left: 45px;">
                                 单位：&nbsp;
                             </div>
-                            <div>
-                                {{ videoData.teacherWorkplace }}
-                            </div>
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                :content="videoData.teacherWorkplace"
+                                placement="bottom-start"
+                            >
+                                <div style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis; width: 100px;">
+                                    {{ videoData.teacherWorkplace }}
+                                </div>
+                            </el-tooltip>
+                            
                         </div>
 
                         <div style="margin-top: 6px; height: 34px; width: 100%; background: linear-gradient(90deg, rgba(64, 158, 255, 0) 0%, rgba(64, 158, 255, 0.7) 48.56%, rgba(64, 158, 255, 0) 100%); 
@@ -256,6 +273,7 @@ const cid = route.query.cid
 
 const levelHtmlVisible = ref(false)
 const showType = ref(1)
+const componentKey = ref(0)
 
 const canStartStudy = async () => {
     let r = await axios.get(`/api/client/course/v1/learn_course_detail?id=${id}`)
@@ -278,7 +296,6 @@ const requestCameraPermission = async () => {
             router.go(-1)
         }, 1000);
     }
-    
 }
 
 
@@ -325,7 +342,9 @@ onUnmounted(async () => {
     const permission = await navigator.permissions.query({ name: 'camera' })
     permission.onchange = null
 })
-
+const downloadByUrl = (url) => {
+    window.open(url)
+}
 
 let customInterval = null
 onUnmounted(() => {
@@ -402,6 +421,8 @@ const videoPlay = () => {
     let ps = playData[selectPlayIndex.value].currentDuration
     if (ps > 0) {
         v.currentTime = ps
+    } else {
+        v.currentTime = 0
     }
     
     uploadRecordObject.chapterId = playData[selectPlayIndex.value].id
@@ -455,17 +476,16 @@ const updatePlayIndex = (index) => {
         ElMessage.warning('上一个视频还未观看完毕')
         return
     }
+    componentKey.value = componentKey.value + 1
     selectPlayIndex.value = index
     // 视频暂停，并且时间切换为0秒进度
     pauseVideo()
-    let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
-    let ps = playData[selectPlayIndex.value].currentDuration
-    if (ps > 0 && ps != parseInt(v.duration)) {
-        v.currentTime = ps
-    } else {
-        v.currentTime = 0
-    }
     selectVideoUrl.value = playData[selectPlayIndex.value].url
+   
+    nextTick(() => {
+        let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
+        v.currentTime = 0
+    })
 
 }
 
@@ -489,10 +509,26 @@ const onEnded = () => {
     if (isLearnSuccess()) {
         return
     }
-    uploadRecord()
+    canUpdateTime = false
     playData[selectPlayIndex.value].progress = 100
+    lastTime.value = 0
+    try {
+        exitFullscreen()
+    } catch(e) {
+        console.log(e)
+    }
+    
+    // 清楚定时任务
+    if (customInterval) {
+        clearInterval(customInterval)
+    }
+    uploadRecord()
     // 判断是否是最后一个
     showType.value = (playData.length - 1 == selectPlayIndex.value ? 3 : 2 )
+    if (playData.length - 1 != selectPlayIndex.value) {
+        let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
+        v.currentTime = 0
+    }
     levelHtmlVisible.value = true
 }
 
@@ -500,8 +536,13 @@ const studyNext = () => {
     updatePlayIndex(selectPlayIndex.value + 1)
     levelHtmlVisible.value = false
     // 自动播放
-    const video = videoPlayRef.value.$el.getElementsByTagName('video')[0]
-    video.play()
+    nextTick(() => {
+        let v = videoPlayRef.value.$el.getElementsByTagName('video')[0]
+        v.currentTime = 0
+        
+        // 渲染完之后，再播放
+        v.play()
+    })
 }
 
 
@@ -527,7 +568,12 @@ const onSeeked = () => {
 const photoDataUrl = ref(null)
 const videoDialogVisible = ref(false)
 const captureImage = async () => {
-    exitFullscreen()
+    try {
+        exitFullscreen()
+    } catch(e) {
+        // 忽略报错内容
+    }
+    
     pauseVideo()
     // 打开摄像头
     // pzStream = await navigator.mediaDevices.getUserMedia({video: true})
@@ -552,6 +598,7 @@ const onSeeking = () => {
     if (isLearnSuccess()) {
         return
     }
+    console.log('seeking...')
     canUpdateTime = false
     const video = videoPlayRef.value.$el.getElementsByTagName('video')[0]
     if (video.currentTime !== lastTime.value) {

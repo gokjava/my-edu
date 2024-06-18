@@ -59,7 +59,10 @@ const routes = [
                 ]
             },{
                 path: 'hour',
-                component: ReductionPage
+                component: ReductionPage,
+            },{
+                path: 'hourAdd',
+                component: () => import('@/components/reduction/reduction-add-components')
             },{
                 path: 'eduction',
                 component: EductionPage

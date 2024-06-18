@@ -1,15 +1,13 @@
 <template>
     <div v-if="random == 1">
         <div class="tabs-with-button">
-            <el-tabs style="width: 85%;" v-model="activeName" @tab-click="handleClick">
+            <el-tabs style="width: 100%;" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" :name="0"></el-tab-pane>
                 <el-tab-pane label="待审核" :name="1"></el-tab-pane>
                 <el-tab-pane label="审核通过" :name="2"></el-tab-pane>
                 <el-tab-pane label="审核驳回" :name="3"></el-tab-pane>
             </el-tabs>
-            <el-button type="primary" style="width: 88px; height: 32px;" @click="random = 2">新增</el-button>
         </div>
-
         <div>
             <el-table :data="testData" style="width: 100%" header-cell-class-name="customheaderRowClassName" header-row-style="customheaderRowClassName" :fit="true"  >
                 <el-table-column align="center" prop="id" label="序号" ></el-table-column>
@@ -17,7 +15,13 @@
                 <el-table-column align="center" prop="exemptionType" label="减免类型" ></el-table-column>
                 <el-table-column  prop="reason" label="申请理由" min-width="250"></el-table-column>
                 <el-table-column align="center" prop="applicationTime" label="申请时间"  min-width="200"></el-table-column>
-                <el-table-column align="center" prop="status" label="状态" ></el-table-column>
+                <el-table-column align="center" prop="status" label="状态" >
+                    <template #default="scope">
+                        <span :style="{ color: (scope.row.statusCode == 1 ? 'rgba(0, 0, 0, 1)' : scope.row.statusCode == 2 ? 'rgba(82, 155, 46, 1)' : 'rgba(255, 87, 51, 1)') }">
+                            {{ scope.row.status }}
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" label="-" >
                     <template #default="scope">
                         <el-button  type="text" @click="queryDetail(scope.row)">查看详情</el-button>
@@ -174,6 +178,7 @@ import { defineComponent, ref, reactive } from 'vue'
 import axios from '@/axios'
 import { ElMessage } from 'element-plus'
 import { getServerUrl } from '@/components/common/constant'
+import { useRouter } from 'vue-router'
 const serverUrl = getServerUrl()
 
 
@@ -183,7 +188,10 @@ export default defineComponent({
     components: {
     },
     setup() {
-
+        const router = useRouter()
+        const toAdd = () => {
+            router.push('/main/hourAdd')
+        }
         const activeName =  ref(0)
 
         const handleClick = (a) => {
@@ -264,7 +272,8 @@ export default defineComponent({
                     "reason": item.reason,
                     "applicationTime": item.createTime,
                     "status": item.status == 1 ? '待审核' : item.status == 2 ? '审核通过' : '审核不通过',
-                    "details": "查看详情"
+                    "details": "查看详情",
+                    "statusCode": item.status
                 }
             }))
         }
@@ -289,7 +298,7 @@ export default defineComponent({
 
         return {
             activeName,handleClick, testData, queryDetail, drawer, random, formId, formType, formReason, years, serverUrl,
-            getHeaders, submitApplication, onSuccess, onRemove, selectItem, openMaterial, tokenRef
+            getHeaders, submitApplication, onSuccess, onRemove, selectItem, openMaterial, tokenRef, toAdd
         }
     }
     

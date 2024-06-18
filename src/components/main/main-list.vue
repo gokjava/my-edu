@@ -25,7 +25,7 @@
 
                     <div style="width: 671px;">
                         <div style="font-size: 16px;font-weight: 600;letter-spacing: 0px;line-height: 14px;color: rgba(96, 98, 102, 1); margin-top: 8px; cursor: pointer;" @click="showDetails(item)">{{ item.title }}</div>
-                        <div style="min-height: 44px;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(96, 98, 102, 1); margin-top: 20px;">{{ item.description }}</div>
+                        <div style="min-height: 44px;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(96, 98, 102, 1); margin-top: 20px; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;text-overflow: ellipsis;word-break: break-word; ">{{ item.description }}</div>
                         <div style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(144, 147, 153, 1); margin-top: 12px;">
                             <Time theme="outline" size="15" fill="#333" :strokeWidth="2" style="position: relative; top: 2px; padding-right: 6px;" />{{ item.postTime ?  item.postTime.replace('T', ' ') : null}}
                         </div>

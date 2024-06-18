@@ -259,11 +259,11 @@ export default defineComponent({
 
             aciveIndex.value = 3
             let r = await axios.post('/api/client/order/v1/create_order', {
-                paymentFrom: 1,
+                paymentFrom: 2,
                 paymentMethod: 1,
                 selectedCourses: courseList.map(course => course.id).join(','),
                 year: yearData.find(y => y.id = selectYearId.value).year,
-                yid: selectYearId.value
+                yid: selectYearId.value,
             })
             if (r.data.code == 1) {
                 orderDetail.id = r.data.data.id

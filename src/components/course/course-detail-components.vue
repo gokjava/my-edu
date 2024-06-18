@@ -38,7 +38,7 @@
                         </div>
                         <div class="prince-container">
                             <div class="prince-desc" style="color: rgba(96, 98, 102, 1);">未完成</div>
-                            <div class="prince-num" >{{ selectCourse.courseTotal - selectCourse.courseMajor - selectCourse.courseMinor }}</div>
+                            <div class="prince-num" >{{ selectCourse.courseTotal - selectCourse.completeMajor - selectCourse.completeMinor }}</div>
                         </div>
                         <div class="prince-container">
                             <div class="prince-desc" style="color: rgba(96, 98, 102, 1);">待考核</div>
@@ -118,9 +118,9 @@
                             {{ item.title }}
                         </div>
                         <div style="margin-top: 6px; display: flex; justify-content: space-between;">
-                            <div style="font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(144, 147, 153, 1);">
+                            <div style="font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(144, 147, 153, 1); width: 180px;">
                                 <div>讲师：&nbsp;{{ item.teacher.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ item.teacher.zhi }}</div>
-                                <div>单位：&nbsp;{{ item.danwei }}</div>
+                                <div class="one-line-ellipsis">单位：&nbsp;{{ item.danwei }}</div>
                             </div>
 
                             <div style="font-size: 14px; font-weight: 400; line-height: 22px; color: rgba(255, 141, 26, 1); margin-top: 7px;">
@@ -129,9 +129,11 @@
                         </div>
                         <el-progress :percentage="item.programs" color="#B3E19D" style="width: 105%;" class="custom-progress"></el-progress>
                         <div style="display: flex; justify-content: space-between; padding-bottom: 16px; margin-top: 12px;">
-                            <el-button style="width: 116px; height: 36px;" type="primary" @click="startStudy(item, index)">开始学习</el-button>
+                            <el-button style="width: 116px; height: 36px;" type="primary" @click="startStudy(item, index)">
+                                {{ item.progress == 0 ? '开始学习' : item.progress == 100 ? '进入复习' : '继续学习' }}
+                            </el-button>
                             <!-- :disabled="item.programs != 100" -->
-                            <el-button style="width: 116px; height: 36px;" type="primary" :disabled="item.programs != 100" @click="toOnlineExamination(item)">在线考试</el-button>
+                            <el-button style="width: 116px; height: 36px;" type="danger" :disabled="item.programs != 100" @click="toOnlineExamination(item)">在线考试</el-button>
                         </div>
                     </div>
                 </div>

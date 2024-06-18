@@ -41,5 +41,10 @@ body {
   background-color: #C6E2FF;
 }
 
+.one-line-ellipsis {
+  white-space: nowrap; /* 禁止换行 */
+  overflow: hidden; /* 隐藏溢出内容 */
+  text-overflow: ellipsis; /* 使用省略号表示溢出内容 */
+}
 
 </style>

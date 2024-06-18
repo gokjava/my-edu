@@ -95,7 +95,7 @@
 
 <script>
 
-import { defineComponent,reactive,ref } from 'vue'
+import { defineComponent,reactive,ref, onMounted } from 'vue'
 import bg1 from '@/assets/bg1.png'
 import bg2 from '@/assets/bg2.jpg'
 import qrCode from '@/assets/test-qrcode.png'
@@ -105,6 +105,17 @@ import axios from '@/axios'
 export default defineComponent({
     name: 'eductionComponent',
     setup() {
+
+        onMounted(() => {
+            // 动态加载本地的 html2canvas
+            const script = document.createElement('script');
+            script.src = '@/assets/html2canvas.min.js';
+            script.onload = () => {
+            this.html2canvas = window.html2canvas;
+            };
+            document.head.appendChild(script);
+        })
+
         const detail = ref({})
         const print = async (id) => {
             

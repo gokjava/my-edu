@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 52px;">
+            <div style="text-align: center; margin-top: 52px; padding-bottom: 32px;">
                 <el-button type="primary" style="width: 200px; height: 40px;" @click="submit">提交</el-button>
             </div>
 
@@ -218,7 +218,7 @@ export default defineComponent({
         }
         const newId = ref(null)
         const title = ref(route.query.title)
-        const m = ref(30)
+        const m = ref(45)
         const s = ref(0)
         let customTimeout = null
         const startExam = () => {

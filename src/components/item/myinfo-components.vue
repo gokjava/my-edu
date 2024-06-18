@@ -221,7 +221,7 @@
                         开票状态
                     </div>
                     <div class="item-right-one">
-                        {{ selectItemFp.invoiceStatus == 1 ? '待开票' : '已经开票' }}
+                        {{ selectItemFp.invoiceStatus == 1 ? '待开票' : '已开票' }}
                     </div>
                 </div>
 
@@ -230,7 +230,7 @@
                         发票下载
                     </div>
                     <div class="item-right-one">
-                        <el-button type="text" @click="toDownloadPdf(selectFp.invoiceUrl)">{{ selectFp.invoiceUrl }}</el-button>
+                        <el-button type="text" @click="toDownloadPdf(selectFp.invoiceUrl)">下载</el-button>
                     </div>
                 </div>
             </div>

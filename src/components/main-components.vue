@@ -4,7 +4,7 @@
             <div class="main-com-class-container"  >
                 <!-- <div  style="url(https://img.js.design/assets/img/665352ced606f208c9b98530.png#9d2ac928629cbe21f5c7406052f9328c);"> -->
                 <div  class="main-com-class-title" >
-                    <div style="font-size: 32px;font-weight: 600;letter-spacing: 0px;line-height: 48px;color: rgba(51, 126, 204, 1); width: 100%;">黑龙江省医药流通行业协会执业药师继续教育</div>
+                    <div style="font-size: 32px;font-weight: 600;letter-spacing: 0px;line-height: 48px;color: rgba(51, 126, 204, 1); width: 100%;">黑龙江省医药流通行业执业药师继续教育</div>
                 </div>
             </div>
             <div style="width: 100%; height: 100px; background: rgba(23, 137, 255, 1); display: flex; justify-content: center;">
@@ -30,7 +30,7 @@
         <div style="width: 100%; height: 272px; margin-top: 48px; background-color:rgba(23, 137, 255, 1); display: flex; align-items: center;flex-direction: column; ">
             <div style="width: 1200px; margin-top: 32px; display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.3); height: 60px;">
                 <div style="font-size: 16px;font-weight: 600;letter-spacing: 0px;line-height: 40px;color: rgba(255, 255, 255, 1);">
-                    友情连接
+                    友情链接
                 </div>
                 <div v-for="(item, n) in friendLink" :key="n" style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 40px;color: rgba(255, 255, 255, 1); margin-left: 32px; cursor: pointer;" @click="openNewWindow(item.redirectUrl)">
                     {{ item.title}}
@@ -40,7 +40,7 @@
             <div style="width: 1200px; margin-top: 20px; display: flex; justify-content: center;">
                 <div style="width: 651px;  display: flex; justify-content: space-between;">
                     <div style="text-align: center; ">
-                        <img src="https://img.js.design/assets/img/6634929e46a9c21101abcbe4.png#671faedaf8013c54f81139e6871489ca" style="height: 140px; width: 140px;" />
+                        <img src="https://assets.hljszyys.com/static/qrcode_for_gh_80ec205c03ee_430.jpg" style="height: 140px; width: 140px;" />
                         <div style="font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 20px;color: rgba(255, 255, 255, 1);">官方微信公众号</div>
                     </div>
                     <div style="font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 28px;color: rgba(255, 255, 255, 1);">
@@ -48,10 +48,10 @@
                             主办单位：黑龙江医药零售行业协会
                         </div>
                         <div>
-                            地         址:  黑龙江省哈尔滨市南岗区宣利街与黄河路交叉口北50米龙港厦18楼
+                            地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：  黑龙江省哈尔滨市南岗区宣利街2号龙之港大厦1801室
                         </div>
                         <div>
-                            邮         箱：171084082@qq.com
+                            邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：171084082@qq.com 
                         </div>
                         <div>
                             技术支持：北京百兴园创信息科技有限公司
@@ -74,20 +74,28 @@
             <el-tooltip
                     class="box-item"
                     effect="light"
-                    placement="top-start"
+                    placement="left-start"
                 >
 
                 <template #content>
                     <div class="qrcode-container">
-                        <img src="https://img.js.design/assets/img/6634929e46a9c21101abcbe4.png#671faedaf8013c54f81139e6871489ca" style="height: 140px; width: 140px; " />
+                        <img src="https://assets.hljszyys.com/static/scan-qrcode.png" style="height: 140px; width: 140px; " />
                     </div>
                 </template>
 
                 <img src="@/assets/main/mobileStudy.png" style="width: 56px; height: 80px;" />
 
             </el-tooltip>
-                <el-tooltip class="box-item" content="电话：0451-82738127" placement="bottom-start">
+                <el-tooltip class="box-item"   effect="light"  placement="left-start">
                     <img src="@/assets/main/kf.png" style="width: 56px; height: 56px; margin-top: 4px;" />
+
+                    <template #content>
+                        客服电话：0451-82738127
+                        <div class="qrcode-container">
+                            <img src="https://assets.hljszyys.com/static/wechat.png" style="height: 140px; width: 140px; " />
+                        </div>
+                    </template>
+
                 </el-tooltip>
         </div>
     </div>
@@ -146,7 +154,7 @@ const menus = [
         name: '联系我们',
         icon: PhoneVideoCall,
         path: '/home/lxwm',
-        cid: 9
+        cid: 33
     }
 ]
 
@@ -257,7 +265,8 @@ export default defineComponent({
 
 .main-com-class-container {
     width: 100%; height: 144px; background: rgba(236, 245, 255, 1); display: flex; justify-content: center; 
-    background-image: url(../assets/home-title-new.png)
+    background-image: url(../assets/home-title-new.png);
+    background-position: top center;
 }
 
 </style>

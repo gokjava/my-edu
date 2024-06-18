@@ -1,7 +1,7 @@
 <template>
 
-    <div v-if="props.img && !showText">
-        <img :src="props.img "  :style="{ width: props.width + 'px', height: props.height + 'px' }"  @error="handleError"/>
+    <div v-if="props.img && !showText" >
+        <img :src="props.img "  :style="{ width: props.width + 'px', height: props.height + 'px' }" style="object-fit: cover; object-position: center top"  @error="handleError"/>
     </div>
     <div v-if="!props.img || showText" class="bg-color-primary-brand-9 img-text-common" :style="{ width: props.width + 'px', height: props.height + 'px', fontSize: props.fontSize ? fontSize + 'px' : '16px' }">
         {{ props.text }}

@@ -11,7 +11,7 @@
         <div class="right-container">
             <div class="form">
                 <div class="form-title">
-                    黑龙江省医药流通行业协会执业药师继续教育
+                    黑龙江省医药流通行业执业药师继续教育
                 </div>
                 <div class="form-input">
                     <el-input style="height: 36px;" v-model="username" placeholder="请输入身份证号">
@@ -78,13 +78,20 @@ export default defineComponent({
 
     name: "loginPage",
     setup() {
+        const { proxy } = getCurrentInstance();
+        const token = localStorage.getItem('token');
+        if (token) {
+            // 如果登录过了，直接跳转到控制台
+            proxy.$router.push('/main/workbench')
+        }
+
         onMounted(() => {
             document.body.style.backgroundColor = 'rgba(236, 245, 255, 1)';
         })
         const username = ref(null)
         const password = ref(null)
         const showPassword = ref(false)
-        const { proxy } = getCurrentInstance();
+        
         const updateInputType = () => {
             showPassword.value = !showPassword.value
         }

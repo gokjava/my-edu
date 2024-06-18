@@ -8,7 +8,7 @@
                 地址
             </div>
             <div style="width: 205px;">
-                黑龙江省哈尔滨市南岗区宣利街与黄河路交叉口北50米龙港厦18楼
+                黑龙江省哈尔滨市南岗区宣利街2号龙之港大厦1801室
             </div>
         </div>
         <div style="width: 100%; display: flex;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 22px;color: rgba(96, 98, 102, 1);margin-top: 8px; margin-left: 15px;">
@@ -34,8 +34,8 @@
             <Wechat theme="outline" size="23" fill="rgba(23, 137, 255, 1)" :strokeWidth="2" style="position: relative; top: 3px; padding-left: 15px; padding-right: 10px;"/>微信客服
         </div>
 
-        <div style="text-align: center;">
-            <img src="https://img.js.design/assets/img/6634929e46a9c21101abcbe4.png#671faedaf8013c54f81139e6871489ca" style="height: 140px; width: 140px; margin-top: 16px;" />
+        <div style="text-align: center; padding-bottom: 12px;">
+            <img src="https://assets.hljszyys.com/static/wechat.png" style="height: 140px; width: 140px; margin-top: 16px;" />
             <div>
                 微信客服二维码
             </div>
